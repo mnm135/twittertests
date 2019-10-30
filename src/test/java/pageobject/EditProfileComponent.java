@@ -19,10 +19,10 @@ public class EditProfileComponent extends BasePage {
     @FindBy(xpath = "//input[@name='url']")
     public WebElement websiteInput;
 
-    @FindBy(xpath = "//div[@aria-label='Add banner photo']")
-    public WebElement addBannerPhotoIcon;
-    @FindBy(xpath = "//div[@aria-label='Add avatar photo']")
-    public WebElement addAvatarPhotoIcon;
+    @FindBy(xpath = "(//input[@type='file'])[1]")
+    public WebElement addBannerPhotoInput;
+    @FindBy(xpath = "(//input[@type='file'])[2]")
+    public WebElement addAvatarPhotoInput;
 
     @FindBy(xpath = "//span[text()='Save']")
     public WebElement saveProfileButton;
