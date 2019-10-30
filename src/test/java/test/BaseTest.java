@@ -32,9 +32,9 @@ public class BaseTest {
         loginPage = new LoginPage(driver);
         //@TODO move to pom
         driver.get("https://twitter.com");
+
+
         loginPage.loginLink.click();
-
-
         loginPage.loginButton.click();
     }
 
