@@ -47,4 +47,12 @@ public class EditProfileComponent extends BasePage {
         saveProfileButton.click();
         //waitForElementToDisappear(editProfileWindow);
     }
+
+    public void changeBannerPhoto(String photoPath) {
+        addBannerPhotoInput.sendKeys(photoPath);
+    }
+
+    public void changeAvatarPhoto(String photoPath) {
+        addAvatarPhotoInput.sendKeys(photoPath);
+    }
 }
