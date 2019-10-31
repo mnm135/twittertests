@@ -27,6 +27,8 @@ public class ProfilePage extends BasePage {
 
     @FindBy(xpath = "(//article)[1]")
     public WebElement lastTweet;
+    @FindBy(xpath = "((//article)[1]//div/span)[4]")
+    public WebElement lastTweetContent;
     @FindBy(xpath = "(//article)[1]//div[@data-testid='like']")
     public WebElement lastTweetLikeButton;
 

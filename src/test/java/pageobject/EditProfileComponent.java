@@ -15,6 +15,9 @@ public class EditProfileComponent extends BasePage {
 
     @FindBy(xpath = "//div[@aria-labelledby='modal-header']")
     public WebElement editProfileWindow;
+    @FindBy(xpath = "//div[@aria-labelledby='modal-header']//span[text()='Edit profile']")
+    public WebElement editProfileLabel;
+
     @FindBy(xpath = "//input[@name='name']")
     public WebElement nameInput;
     @FindBy(xpath = "//textarea[@name='description']")
@@ -32,6 +35,9 @@ public class EditProfileComponent extends BasePage {
     @FindBy(xpath = "//span[text()='Save']")
     public WebElement saveProfileButton;
 
+    @FindBy(xpath = "//span[text()='Url is not valid']")
+    public WebElement incorrectUrlMessage;
+
     public EditProfileComponent(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -48,7 +54,6 @@ public class EditProfileComponent extends BasePage {
         scrollToElement(locationInput);
         websiteInput.clear();
         websiteInput.sendKeys(website);
-
         //saveProfileButton.click();
         //waitForElementToDisappear(editProfileWindow);
     }

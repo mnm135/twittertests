@@ -1,6 +1,7 @@
 package test;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,6 +15,8 @@ class ProfileTests extends BaseTest {
     private EditProfileComponent editProfileComponent;
     private FollowingPage followingPage;
     private LikesComponent likesComponent;
+    private TweetPage tweetPage;
+    private TweetComposePage tweetComposePage;
 
     @ParameterizedTest
     @CsvSource({
@@ -162,12 +165,25 @@ class ProfileTests extends BaseTest {
 
     }
 
-    @Test
-    void userCanSeeHisTweetsOnProfilePage() {
+    //@TODO move to tweeting tests?
+    @ParameterizedTest
+    @CsvSource({"asd 123", "drugi tweet"})
+    void userCanSeeHisTweetsOnProfilePage(String tweetContent) throws InterruptedException {
+        homePage = new HomePage(driver);
+        tweetComposePage = new TweetComposePage(driver);
+        tweetPage = new TweetPage(driver);
+        profilePage = new ProfilePage(driver);
 
+        homePage.startAddingTweetProcess();
+        tweetComposePage.writeTweet(tweetContent);
+        tweetComposePage.sendTweetButton.click();
+        homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
+
+        homePage.profileLink.click();
+        Thread.sleep(1000);
+        profilePage.scrollToElement(profilePage.lastTweet);
+        Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
     }
-
-
 
     @ParameterizedTest
     @CsvSource({
@@ -187,18 +203,34 @@ class ProfileTests extends BaseTest {
         editProfileComponent.changeBannerPhoto("C:\\Users\\Emil\\IdeaProjects\\twittertests\\src\\test\\resources\\sample_banner_photo.png");
     }
 
+    @Disabled
     @Test
     void userCantChangeProfilePhotosWithWrongFormat() {
-
+        //infinite loader solution on twitter side, no point to write it
     }
 
+    @Disabled
     @Test
     void userCantChangeProfilePhotosWithTooBigFiles() {
-
+        //infinite loader solution on twitter side, no point to write it
     }
 
-    @Test
-    void userCantChangeHisEmailToWrongFormat() {
+    @ParameterizedTest
+    @CsvSource({"www", "google", "www.www", "goooooooooooooooooooooooooooooooooooooooooooooooooogle.pl"})
+    void userCantChangeHisEmailToWrongFormat(String website) {
+        homePage = new HomePage(driver);
+        profilePage = new ProfilePage(driver);
+        editProfileComponent = new EditProfileComponent(driver);
+        final String name = "default name";
+        final String location = "default location";
+        final String bio = "just random bio";
 
+        homePage.profileLink.click();
+        profilePage.editProfileButton.click();
+        profilePage.waitForElement(editProfileComponent.editProfileWindow);
+        editProfileComponent.editProfileData(name, bio, location, website);
+        editProfileComponent.saveProfileButton.click();
+        Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
+        Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
     }
 }
