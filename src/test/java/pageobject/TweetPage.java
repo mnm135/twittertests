@@ -1,5 +1,6 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,6 +40,7 @@ public class TweetPage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Delete tweet")
     public void deleteTweet() {
         moreIcon.click();
         deleteButton.click();
@@ -52,6 +54,7 @@ public class TweetPage extends BasePage {
         return formatter.format(date);
     }
 
+    @Step("Verify that tweet contains correct content and user data")
     public void verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(String tweetText) {
         //@TODO parametrize in pom or somewhere
         //Assertions.assertEquals(authorAccountName.getText(), "@Emil08345731");

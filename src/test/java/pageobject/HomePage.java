@@ -1,5 +1,6 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -41,21 +42,30 @@ public class HomePage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Open {0} tweet")
     public void openTweetByPosition(int position) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         tweets.get(position).click();
     }
 
+    @Step("Navigate to compose tweet page")
     public void startAddingTweetProcess() {
         waitForElement(composeTweetLink);
         scrollToElement(composeTweetLink);
         composeTweetLink.click();
     }
 
+    @Step("Verify that tweed was added successfully")
     public void verifyThatAddedTweetWasAddedSuccessfully(String tweetContent) {
         Assertions.assertEquals(lastTweet.getText(), tweetContent);
         Assertions.assertTrue(tweetSuccessfullySentNotification.isDisplayed());
     }
 
+    @Step("Find and go to other user profile page")
     public void searchForUser(String userId) {
         searchInput.sendKeys(userId);
         waitForElement(firstFoundResult);
@@ -67,6 +77,7 @@ public class HomePage extends BasePage {
 
     //separate method to avoid StaleElementException after reloading page
     //@TODO can be written nicer
+    @Step("Add current user to following")
     public void followCurrentUser() {
         try {
             Thread.sleep(1000);

@@ -1,5 +1,6 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -39,10 +40,18 @@ public class TweetComposePage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Type in tweet text")
     public void writeTweet(String tweet) {
         tweetTextArea.sendKeys(tweet);
     }
 
+    @Step("Write and send tweet")
+    public void writeAndSendTweet(String tweet) {
+        tweetTextArea.sendKeys(tweet);
+        sendTweetButton.click();
+    }
+
+    @Step("Add {0} emoji")
     public void addEmojiByName(String name) {
         addEmojiButton.click();
         driver.findElement(By.xpath(String.format(TEMPLATE, name))).click();

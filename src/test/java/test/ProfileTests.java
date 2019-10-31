@@ -1,5 +1,6 @@
 package test;
 
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
 import pageobject.*;
 
+@Feature("User can mange his profile")
 class ProfileTests extends BaseTest {
 
     private HomePage homePage;
