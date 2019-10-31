@@ -1,14 +1,18 @@
 package test;
 
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import io.qameta.allure.Step;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
 import pageobject.*;
 
+import java.util.List;
+
+import static io.qameta.allure.Allure.step;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("User can mange his profile")
 class ProfileTests extends BaseTest {
 
@@ -20,7 +24,14 @@ class ProfileTests extends BaseTest {
     private TweetPage tweetPage;
     private TweetComposePage tweetComposePage;
 
-    @ParameterizedTest
+    @Step("Open edit profile form")
+    private void openEditProfileComponentFromHomePage() {
+        homePage.profileLink.click();
+        profilePage.editProfileButton.click();
+        profilePage.waitForElement(editProfileComponent.editProfileWindow);
+    }
+
+    @ParameterizedTest(name = "User can change his user data")
     @CsvSource({
             "Emil_new_name1, 1template bio, Warszawa, www.google.pl"
     })
@@ -29,16 +40,13 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
 
-        homePage.profileLink.click();
-        profilePage.editProfileButton.click();
-        profilePage.waitForElement(editProfileComponent.editProfileWindow);
-
+        openEditProfileComponentFromHomePage();
         editProfileComponent.editProfileData(name, bio, location, website);
         editProfileComponent.saveProfileButton.click();
         profilePage.verifyUserDataIsCorrect(name, bio, location, website);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can't add too long values in edit profile form")
     @CsvSource({
             "Emil_new_name1asddsadadsdsadsadasdasdasdasdsadsads123123, 1template bio12332132131232123123123123121template bio12332132131232123123123123121template bio12332132131232123123123123121template bio123321321312321231231231 bio, WarszawaWarszawaWarszawaWarsza, www.google.pl"
     })
@@ -47,9 +55,7 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
 
-        homePage.profileLink.click();
-        profilePage.editProfileButton.click();
-        profilePage.waitForElement(editProfileComponent.editProfileWindow);
+        openEditProfileComponentFromHomePage();
 
         editProfileComponent.editProfileData(name, bio, location, website);
 
@@ -82,9 +88,7 @@ class ProfileTests extends BaseTest {
         final String location = "default location";
         final String website = "www.google.pl";
 
-        homePage.profileLink.click();
-        profilePage.editProfileButton.click();
-        profilePage.waitForElement(editProfileComponent.editProfileWindow);
+        openEditProfileComponentFromHomePage();
 
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
         editProfileComponent.editProfileData(name, formattedBio, location, website);
@@ -104,12 +108,13 @@ class ProfileTests extends BaseTest {
                 website);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can see in his profile other users that he's following")
     @CsvSource({"@CezaryGutowski", "@ScuderiaFerrari", "@netguru"})
     void userCanSeeHisFollows(String userId) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
+
         homePage.searchForUser(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
@@ -124,40 +129,52 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
+
         homePage.searchForUser(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
-        profilePage.verifyUserIsVisibleInFollowing(userId);
-        Assertions.assertTrue(followingPage.followedAccountCell.isDisplayed());
-        Assertions.assertEquals(followingPage.followButton.getText(), "Following");
-        followingPage.followButton.click();
-        followingPage.confirmUnfollow.click();
-        Assertions.assertEquals(followingPage.followButton.getText(), "Follow");
-        driver.navigate().refresh();
-        Assertions.assertFalse(followingPage.followedAccountCell.isDisplayed());
+
+        step("Verify that user is displayed as followed", (step) -> {
+            Assertions.assertTrue(followingPage.followedAccountCell.isDisplayed());
+            Assertions.assertEquals(followingPage.followButton.getText(), "Following");
+        });
+        step("Unfollow user", (step) -> {
+            followingPage.followButton.click();
+            followingPage.confirmUnfollow.click();
+        });
+        step("Verify that button changes its text from Following to Follow", (step) -> {
+            Assertions.assertEquals(followingPage.followButton.getText(), "Follow");
+        });
+
+        followingPage.verifyThatUserIsNoLongerFollowed(userId);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can see tweets he likes on his profile page")
     @CsvSource({"@netguru"})
-    void userCanSeeHisLikesOnProfilePage(String userId) throws InterruptedException {
+    void userCanSeeHisLikesOnProfilePage(String userId) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
         likesComponent = new LikesComponent(driver);
+
         homePage.searchForUser(userId);
         profilePage.scrollToElement(profilePage.lastTweet);
         String tweetHref = profilePage.lastTweetLink.getAttribute("href");
-        profilePage.waitForElementToBeClickable(profilePage.lastTweetLikeButton);
-        profilePage.lastTweetLikeButton.click();
-        homePage.profileLink.click();
-        profilePage.likesNavigationButton.click();
-        likesComponent.verifyThatTweetIsVisibleByHref(tweetHref);
+        step("Like latest tweet visible", (step) -> {
+            profilePage.waitForElementToBeClickable(profilePage.lastTweetLikeButton);
+            profilePage.lastTweetLikeButton.click();
+        });
+        step("Verify that previously liked tweet is visible on profile page", (step) -> {
+            homePage.profileLink.click();
+            profilePage.likesNavigationButton.click();
+            likesComponent.verifyThatTweetIsVisibleByHref(tweetHref);
+        });
     }
 
     //@TODO move to tweeting tests?
-    @ParameterizedTest
+    @ParameterizedTest(name = "Added tweets are visible on profile page")
     @CsvSource({"asd 123", "drugi tweet"})
     void userCanSeeHisTweetsOnProfilePage(String tweetContent) throws InterruptedException {
         homePage = new HomePage(driver);
@@ -172,11 +189,14 @@ class ProfileTests extends BaseTest {
 
         homePage.profileLink.click();
         Thread.sleep(1000);
-        profilePage.scrollToElement(profilePage.lastTweet);
-        Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
+        step("Verify that previously added tweet is visible on profile page", (step) -> {
+            profilePage.scrollToElement(profilePage.lastTweet);
+            Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
+        });
+
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can change his profile photos")
     @CsvSource({
             "Emil_new_name1, 1template bio, Warszawa, www.google.pl"
     })
@@ -206,9 +226,9 @@ class ProfileTests extends BaseTest {
         //infinite loader solution on twitter side, no point to write it
     }
 
-    @ParameterizedTest
-    @CsvSource({"www", "google", "www.www", "gooooooooooogle.pl.we.dk"})
-    void userCantChangeHisEmailToWrongFormat(String website) {
+    @ParameterizedTest(name = "User can't set his website using wrong www format")
+    @CsvSource({"www", "google", "www.www", "gooooooooooogle.pl.we......dk"})
+    void userCantChangeHisWebsiteToWrongFormat(String website) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
@@ -224,4 +244,13 @@ class ProfileTests extends BaseTest {
         Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
         Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
     }
+/*
+    @AfterAll
+    void cleanTestData() {
+        cleanTweets();
+        cleanLikes();
+        cleanFollows();
+    }
+
+ */
 }
