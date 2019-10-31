@@ -3,6 +3,7 @@ package pageobject;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
@@ -65,7 +66,7 @@ public class HomePage extends BasePage {
         Assertions.assertTrue(tweetSuccessfullySentNotification.isDisplayed());
     }
 
-    @Step("Find and go to other user profile page")
+    @Step("Find and go to {0} user profile page")
     public void searchForUser(String userId) {
         searchInput.sendKeys(userId);
         waitForElement(firstFoundResult);
@@ -80,11 +81,15 @@ public class HomePage extends BasePage {
     @Step("Add current user to following")
     public void followCurrentUser() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        waitForElement(driver.findElement(By.xpath("(//div[contains(@data-testid, '-follow')])[1]")));
-        driver.findElement(By.xpath("(//div[contains(@data-testid, '-follow')])[1]")).click();
+        WebElement followButton = driver.findElement(By.xpath("(//div[contains(@data-testid, '-follow')])[1]/div"));
+        waitForElement(followButton);
+        waitForElementToBeClickable(followButton);
+        scrollToElement(followButton);
+        //followButton.click();
+        ((JavascriptExecutor)driver).executeScript("arguments[0].click()", followButton);
     }
 }
