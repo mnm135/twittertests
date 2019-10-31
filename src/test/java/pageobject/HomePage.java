@@ -1,6 +1,7 @@
 package pageobject;
 
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
@@ -10,6 +11,8 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class HomePage extends BasePage {
+
+    private static final String SEARCH_RESULT_TEMPLATE = "(//div[@data-testid='TypeaheadUser'])[1]/div//*[contains(text(), '%s')]";
 
     @FindBy(xpath = "//*[@data-testid='SideNav_NewTweet_Button']")
     public WebElement composeTweetLink;
@@ -57,9 +60,20 @@ public class HomePage extends BasePage {
         searchInput.sendKeys(userId);
         waitForElement(firstFoundResult);
         waitForElementToBeClickable(firstFoundResult);
-        firstFoundResult.click();
-        waitForElement(followButton);
-        waitForElementToBeClickable(followButton);
-//        firstFoundResult.click();
+        waitForElement(driver.findElement(By.xpath(String.format(SEARCH_RESULT_TEMPLATE, userId))));
+        driver.findElement(By.xpath(String.format(SEARCH_RESULT_TEMPLATE, userId))).click();
+        //waitForElementToDisappear(driver.findElement(By.xpath(String.format(SEARCH_RESULT_TEMPLATE, userId))));
+    }
+
+    //separate method to avoid StaleElementException after reloading page
+    //@TODO can be written nicer
+    public void followCurrentUser() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        waitForElement(driver.findElement(By.xpath("(//div[contains(@data-testid, '-follow')])[1]")));
+        driver.findElement(By.xpath("(//div[contains(@data-testid, '-follow')])[1]")).click();
     }
 }

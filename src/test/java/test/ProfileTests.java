@@ -87,6 +87,7 @@ class ProfileTests extends BaseTest {
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
         editProfileComponent.editProfileData(name, formattedBio, location, website);
 
+        //@fixme new line asserts fails
         editProfileComponent.verifyDataInEditForm(
                 name,
                 bio,
@@ -102,18 +103,16 @@ class ProfileTests extends BaseTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"@CezaryGutowski", "@ScuderiaFerrari"})
+    @CsvSource({"@CezaryGutowski", "@ScuderiaFerrari", "@netguru"})
     void userCanSeeHisFollows(String userId) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-
         homePage.searchForUser(userId);
-        homePage.followButton.click();
+        homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
         profilePage.verifyUserIsVisibleInFollowing(userId);
-
     }
 
     @ParameterizedTest
@@ -124,6 +123,7 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
 
+        //@fixme search for user is not consistent
         homePage.searchForUser(userId);
         homePage.followButton.click();
         homePage.profileLink.click();
@@ -152,11 +152,11 @@ class ProfileTests extends BaseTest {
 
         homePage.searchForUser(userId);
 
-        //@fixme
         Thread.sleep(1000);
         profilePage.scrollToElement(profilePage.lastTweet);
         String tweetHref = profilePage.lastTweetLink.getAttribute("href");
         profilePage.scrollToElement(profilePage.lastTweetLikeButton);
+        //@fixme this click doesn't work
         profilePage.lastTweetLikeButton.click();
 
         homePage.profileLink.click();
@@ -215,6 +215,7 @@ class ProfileTests extends BaseTest {
         //infinite loader solution on twitter side, no point to write it
     }
 
+    //@fixme last test data is incorrect
     @ParameterizedTest
     @CsvSource({"www", "google", "www.www", "goooooooooooooooooooooooooooooooooooooooooooooooooogle.pl"})
     void userCantChangeHisEmailToWrongFormat(String website) {
