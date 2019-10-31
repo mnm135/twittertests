@@ -1,9 +1,7 @@
 package test;
 
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,6 +12,7 @@ import pageobject.TweetPage;
 
 import static io.qameta.allure.Allure.step;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("User can sent tweets")
 class SendTwitterTests extends BaseTest {
 
@@ -29,7 +28,7 @@ class SendTwitterTests extends BaseTest {
         homePage.startAddingTweetProcess();
         Assertions.assertEquals(tweetComposePage.sendTweetButton.getAttribute("aria-disabled"), "true");
         tweetComposePage.writeTweet("a");
-        Assertions.assertNull(tweetComposePage.sendTweetButton.getAttribute("aria-disabled"));
+        Assertions.assertEquals(tweetComposePage.sendTweetButton.getAttribute("aria-disabled"), null);
     }
 
     @ParameterizedTest(name = "User can successfully send tweets")
@@ -44,7 +43,7 @@ class SendTwitterTests extends BaseTest {
         homePage.verifyThatAddedTweetWasAddedSuccessfully(tweetContent);
         homePage.openTweetByPosition(0);
         tweetPage.verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(tweetContent);
-        tweetPage.deleteTweet();
+        //tweetPage.deleteTweet();
     }
 
     @ParameterizedTest(name = "User is not able add too long tweet")
@@ -82,7 +81,7 @@ class SendTwitterTests extends BaseTest {
         step("Verify that emojij is displayed correctly in tweet", (step) -> {
             Assertions.assertEquals(tweetPage.emojiInTweet.getAttribute("src"), emojiUrl);
         });
-        tweetPage.deleteTweet();
+        //tweetPage.deleteTweet();
     }
 
     //@TODO add handling more than one chained tweet
@@ -172,15 +171,22 @@ class SendTwitterTests extends BaseTest {
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
-            tweetPage.hashTagInTweet.click();
             Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
             Assertions.assertEquals(tweetPage.hashTagInTweet.getText(), userMention);
         });
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
-            tweetPage.hashTagInTweet.click();
             Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href"), userMention.replace("@", "/"));
-
         });
-        tweetPage.deleteTweet();
+        //tweetPage.deleteTweet();
     }
+
+    /*
+    @AfterAll
+    void cleanTestData() {
+        cleanTweets();
+        cleanLikes();
+        cleanFollows();
+    }
+
+     */
 }

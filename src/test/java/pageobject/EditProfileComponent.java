@@ -1,5 +1,6 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -43,6 +44,7 @@ public class EditProfileComponent extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Edit profile data")
     public void editProfileData(String name, String bio, String location, String website) {
         nameInput.clear();
         nameInput.sendKeys(name);
@@ -66,6 +68,7 @@ public class EditProfileComponent extends BasePage {
         addAvatarPhotoInput.sendKeys(photoPath);
     }
 
+    @Step("Verify edited values are correctly reflected in edit profile form")
     public void verifyDataInEditForm(String name, String bio, String location, String website) {
         scrollToElement(nameInput);
         Assertions.assertEquals(nameInput.getAttribute("value"), name);

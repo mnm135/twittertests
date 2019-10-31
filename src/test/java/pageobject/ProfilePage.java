@@ -1,11 +1,15 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.List;
 
 public class ProfilePage extends BasePage {
 
@@ -25,6 +29,9 @@ public class ProfilePage extends BasePage {
     @FindBy(xpath = "//span[text()='Following']")
     public WebElement followingButton;
 
+
+    @FindAll({@FindBy(xpath = "//article")})
+    public List<WebElement> tweets;
     @FindBy(xpath = "(//article)[1]")
     public WebElement lastTweet;
     @FindBy(xpath = "((//article)[1]//div/span)[4]")
@@ -44,6 +51,7 @@ public class ProfilePage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Verify edited user data is correctly reflected on user profile page")
     public void verifyUserDataIsCorrect(String name, String bio, String location, String website) {
         Assertions.assertTrue(driver.findElement(By.xpath(String.format(USERNAME_TEMPLATE, name))).isDisplayed());
         Assertions.assertEquals(userBio.getText(), bio);
@@ -51,6 +59,7 @@ public class ProfilePage extends BasePage {
         Assertions.assertEquals(userWebsite.getText(), website.substring(4));
     }
 
+    @Step("Verify {0} user is visible as followed")
     public void verifyUserIsVisibleInFollowing(String userId) {
         Assertions.assertTrue(driver.findElement(By.xpath(String.format(FOLLOWED_USER_TEMPLATE, userId))).isDisplayed());
     }
