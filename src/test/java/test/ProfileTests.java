@@ -123,7 +123,7 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
         homePage.searchForUser(userId);
-        homePage.followButton.click();
+        homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
         profilePage.verifyUserIsVisibleInFollowing(userId);
@@ -132,9 +132,7 @@ class ProfileTests extends BaseTest {
         followingPage.followButton.click();
         followingPage.confirmUnfollow.click();
         Assertions.assertEquals(followingPage.followButton.getText(), "Follow");
-
         driver.navigate().refresh();
-
         Assertions.assertFalse(followingPage.followedAccountCell.isDisplayed());
     }
 
@@ -206,9 +204,8 @@ class ProfileTests extends BaseTest {
         //infinite loader solution on twitter side, no point to write it
     }
 
-    //@fixme last test data is incorrect
     @ParameterizedTest
-    @CsvSource({"www", "google", "www.www", "goooooooooooooooooooooooooooooooooooooooooooooooooogle.pl"})
+    @CsvSource({"www", "google", "www.www", "gooooooooooogle.pl.we.dk"})
     void userCantChangeHisEmailToWrongFormat(String website) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
