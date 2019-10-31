@@ -175,7 +175,7 @@ class SendTwitterTests extends BaseTest {
             Assertions.assertEquals(tweetPage.hashTagInTweet.getText(), userMention);
         });
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
-            Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href"), userMention.replace("@", "/"));
+            Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
         });
         //tweetPage.deleteTweet();
     }
