@@ -1,13 +1,12 @@
 package pageobject;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage {
-
-    WebDriver driver;
+public class LoginPage extends BasePage {
 
     @FindBy(xpath = "//div[@class='clearfix field']//input[@name='session[username_or_email]']")
     public WebElement loginInput;
@@ -15,7 +14,7 @@ public class LoginPage {
     public WebElement password;
     @FindBy(xpath = "//button[@type='submit']")
     public WebElement loginButton;
-    @FindBy(xpath = "(//*[@href='/login'])[1]")
+    @FindBy(xpath = "(//a[@href='/login'])[1]")
     public WebElement loginLink;
 
     public LoginPage(WebDriver driver) {
