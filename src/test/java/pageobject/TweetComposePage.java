@@ -1,6 +1,7 @@
 package pageobject;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -46,5 +47,11 @@ public class TweetComposePage extends BasePage {
         addEmojiButton.click();
         driver.findElement(By.xpath(String.format(TEMPLATE, name))).click();
         driver.findElement(By.xpath("//body")).click();
+    }
+
+    public void addUserMention(String userName) {
+        tweetTextArea.sendKeys(" ");
+        tweetTextArea.sendKeys(userName);
+        tweetTextArea.sendKeys(Keys.SPACE);
     }
 }

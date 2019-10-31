@@ -151,4 +151,24 @@ class SendTwitterTests extends BaseTest {
         tweetPage.hashTagInTweet.click();
         Assertions.assertEquals(homePage.searchInput.getAttribute("value"), hashtag);
     }
+
+    @ParameterizedTest
+    @CsvSource({"asd, @Emil08345731"})
+    void userCanSendTweetWithUserMention(String tweetText, String userMention) {
+        homePage = new HomePage(driver);
+        tweetComposePage = new TweetComposePage(driver);
+        tweetPage = new TweetPage(driver);
+
+        homePage.startAddingTweetProcess();
+        tweetComposePage.writeTweet(tweetText);
+        tweetComposePage.addUserMention(userMention);
+        tweetComposePage.sendTweetButton.click();
+        homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
+
+        homePage.openTweetByPosition(0);
+        Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
+        Assertions.assertEquals(tweetPage.hashTagInTweet.getText(), userMention);
+        Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href"), userMention.replace("@", "/"));
+        tweetPage.deleteTweet();
+    }
 }
