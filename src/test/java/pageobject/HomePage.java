@@ -27,6 +27,10 @@ public class HomePage extends BasePage {
 
     @FindBy(xpath = "//input[@aria-label='Search query']")
     public WebElement searchInput;
+    @FindBy(xpath = "(//div[@data-testid='TypeaheadUser'])[1]/div")
+    public WebElement firstFoundResult;
+    @FindBy(xpath = "(//div[contains(@data-testid, '-follow')])[1]")
+    public WebElement followButton;
 
 
     public HomePage(WebDriver driver) {
@@ -47,5 +51,15 @@ public class HomePage extends BasePage {
     public void verifyThatAddedTweetWasAddedSuccessfully(String tweetContent) {
         Assertions.assertEquals(lastTweet.getText(), tweetContent);
         Assertions.assertTrue(tweetSuccessfullySentNotification.isDisplayed());
+    }
+
+    public void searchForUser(String userId) {
+        searchInput.sendKeys(userId);
+        waitForElement(firstFoundResult);
+        waitForElementToBeClickable(firstFoundResult);
+        firstFoundResult.click();
+        waitForElement(followButton);
+        waitForElementToBeClickable(followButton);
+//        firstFoundResult.click();
     }
 }

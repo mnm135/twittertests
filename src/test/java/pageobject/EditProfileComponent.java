@@ -1,5 +1,6 @@
 package pageobject;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,9 +8,13 @@ import org.openqa.selenium.support.PageFactory;
 
 public class EditProfileComponent extends BasePage {
 
+    public static final int NAME_MAX_LENGTH = 50;
+    public static final int BIO_MAX_LENGTH = 160;
+    public static final int LOCATION_MAX_LENGTH = 30;
+    public static final int WEBSITE_MAX_LENGTH = 100;
+
     @FindBy(xpath = "//div[@aria-labelledby='modal-header']")
     public WebElement editProfileWindow;
-
     @FindBy(xpath = "//input[@name='name']")
     public WebElement nameInput;
     @FindBy(xpath = "//textarea[@name='description']")
@@ -44,7 +49,7 @@ public class EditProfileComponent extends BasePage {
         websiteInput.clear();
         websiteInput.sendKeys(website);
 
-        saveProfileButton.click();
+        //saveProfileButton.click();
         //waitForElementToDisappear(editProfileWindow);
     }
 
@@ -54,5 +59,16 @@ public class EditProfileComponent extends BasePage {
 
     public void changeAvatarPhoto(String photoPath) {
         addAvatarPhotoInput.sendKeys(photoPath);
+    }
+
+    public void verifyDataInEditForm(String name, String bio, String location, String website) {
+        scrollToElement(nameInput);
+        Assertions.assertEquals(nameInput.getAttribute("value"), name);
+        scrollToElement(bioInput);
+        Assertions.assertEquals(bioInput.getAttribute("value"), bio);
+        scrollToElement(bioInput);
+        Assertions.assertEquals(locationInput.getAttribute("value"), location);
+        scrollToElement(websiteInput);
+        Assertions.assertEquals(websiteInput.getAttribute("value"), website);
     }
 }
