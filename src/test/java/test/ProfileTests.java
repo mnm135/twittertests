@@ -122,14 +122,11 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
-
-        //@fixme search for user is not consistent
         homePage.searchForUser(userId);
         homePage.followButton.click();
         homePage.profileLink.click();
         profilePage.followingButton.click();
         profilePage.verifyUserIsVisibleInFollowing(userId);
-
         Assertions.assertTrue(followingPage.followedAccountCell.isDisplayed());
         Assertions.assertEquals(followingPage.followButton.getText(), "Following");
         followingPage.followButton.click();
@@ -149,20 +146,14 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
         likesComponent = new LikesComponent(driver);
-
         homePage.searchForUser(userId);
-
-        Thread.sleep(1000);
         profilePage.scrollToElement(profilePage.lastTweet);
         String tweetHref = profilePage.lastTweetLink.getAttribute("href");
-        profilePage.scrollToElement(profilePage.lastTweetLikeButton);
-        //@fixme this click doesn't work
+        profilePage.waitForElementToBeClickable(profilePage.lastTweetLikeButton);
         profilePage.lastTweetLikeButton.click();
-
         homePage.profileLink.click();
         profilePage.likesNavigationButton.click();
         likesComponent.verifyThatTweetIsVisibleByHref(tweetHref);
-
     }
 
     //@TODO move to tweeting tests?

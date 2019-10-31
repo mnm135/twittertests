@@ -20,6 +20,8 @@ public class LikesComponent extends BasePage {
     }
 
     public void verifyThatTweetIsVisibleByHref(String href) {
+        scrollToElement(lastTweetLink);
+        href = href.replace("https://twitter.com", "");
         Assertions.assertTrue(driver.findElement(By.xpath(String.format(HREF_TEMPLATE, href))).isDisplayed());
     }
 }
