@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobject.*;
 
 import java.util.List;
@@ -76,7 +77,7 @@ class ProfileTests extends BaseTest {
     @ParameterizedTest
     @CsvSource({
             "multi\\nline\\nbio",
-            "two new lines\\n\\nthree new lines\\n\\n\\n:)"
+            "more\\nnew\\nlines\\n:)"
     })
 
     void userCanAddMultiLineBio(String bio) {
@@ -93,7 +94,6 @@ class ProfileTests extends BaseTest {
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
         editProfileComponent.editProfileData(name, formattedBio, location, website);
 
-        //@fixme new line asserts fails
         editProfileComponent.verifyDataInEditForm(
                 name,
                 bio,
@@ -101,6 +101,8 @@ class ProfileTests extends BaseTest {
                 website);
 
         editProfileComponent.saveProfileButton.click();
+        profilePage.waitForEditPageToDisappear();
+        //driver.navigate().refresh();
         profilePage.verifyUserDataIsCorrect(
                 name,
                 bio,

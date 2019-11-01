@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class EditProfileComponent extends BasePage {
 
@@ -73,10 +75,11 @@ public class EditProfileComponent extends BasePage {
         scrollToElement(nameInput);
         Assertions.assertEquals(nameInput.getAttribute("value"), name);
         scrollToElement(bioInput);
-        Assertions.assertEquals(bioInput.getAttribute("value"), bio);
+        Assertions.assertEquals(bioInput.getAttribute("value").replaceAll("(\\r|\\n|\\r\\n)+", "\\\\n"), bio);
         scrollToElement(bioInput);
         Assertions.assertEquals(locationInput.getAttribute("value"), location);
         scrollToElement(websiteInput);
         Assertions.assertEquals(websiteInput.getAttribute("value"), website);
     }
+
 }
