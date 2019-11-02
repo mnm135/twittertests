@@ -50,15 +50,14 @@ public class TweetPage extends BasePage {
     //@TODO move to helpers or whatever
     public String getCurrentDate() {
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
         return formatter.format(date);
     }
 
     @Step("Verify that tweet contains correct content and user data")
-    public void verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(String tweetText) {
-        //@TODO parametrize in pom or somewhere
-        //Assertions.assertEquals(authorAccountName.getText(), "@Emil08345731");
-        //Assertions.assertEquals(authorName.getText(), "Emil132");
+    public void verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(String tweetText, String userName, String userAccountName) {
+        Assertions.assertEquals(authorAccountName.getText(), userAccountName);
+        Assertions.assertEquals(authorName.getText(), userName);
         Assertions.assertEquals(tweetContent.getText(), tweetText);
         Assertions.assertTrue(timeAndDate.getText().contains(getCurrentDate()));
     }

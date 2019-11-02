@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
 import pageobject.HomePage;
+import pageobject.ProfilePage;
 import pageobject.TweetComposePage;
 import pageobject.TweetPage;
 
@@ -37,12 +38,18 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposePage = new TweetComposePage(driver);
         tweetPage = new TweetPage(driver);
+        profilePage = new ProfilePage(driver);
+
+        homePage.profileLink.click();
+        String userName = profilePage.userName.getText();
+        String userAccountName = profilePage.userAccountName.getText();
+
         homePage.startAddingTweetProcess();
         tweetComposePage.writeAndSendTweet(tweetContent);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.verifyThatAddedTweetWasAddedSuccessfully(tweetContent);
         homePage.openTweetByPosition(0);
-        tweetPage.verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(tweetContent);
+        tweetPage.verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(tweetContent, userName, userAccountName);
         //tweetPage.deleteTweet();
     }
 

@@ -1,6 +1,7 @@
 package pageobject;
 
 import io.qameta.allure.Step;
+import org.apache.struts.config.ExceptionConfig;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,8 @@ public class ProfilePage extends BasePage {
     public WebElement userWebsite;
     @FindBy(xpath = "(//span[contains(text(), '@')])[1]")
     public WebElement userAccountName;
+    @FindBy(xpath = "//h2[@role='heading']//span/span/span")
+    public WebElement userName;
 
     @FindBy(xpath = "//span[text()='Following']")
     public WebElement followingButton;
@@ -71,5 +74,11 @@ public class ProfilePage extends BasePage {
     public void waitForEditPageToDisappear()  {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.urlContains(userAccountName.getText().substring(1)));
+    }
+
+    public void waitForUserPageToBeOpen(String userId)  {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.urlContains(userId.substring(1)));
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@data-testid='primaryColumn']//div[contains(@data-testid, '-follow')]/div")));
     }
 }

@@ -6,10 +6,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageobject.*;
 
-import java.util.List;
 
 import static io.qameta.allure.Allure.step;
 
@@ -117,11 +115,14 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
 
-        homePage.searchForUser(userId);
+        homePage.searchAndGoToUserPage(userId);
+        profilePage.waitForUserPageToBeOpen(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
         profilePage.verifyUserIsVisibleInFollowing(userId);
+
+        //cleanFollows();
     }
 
     @ParameterizedTest
@@ -132,7 +133,7 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
 
-        homePage.searchForUser(userId);
+        homePage.searchAndGoToUserPage(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
@@ -161,7 +162,7 @@ class ProfileTests extends BaseTest {
         followingPage = new FollowingPage(driver);
         likesComponent = new LikesComponent(driver);
 
-        homePage.searchForUser(userId);
+        homePage.searchAndGoToUserPage(userId);
         profilePage.scrollToElement(profilePage.lastTweet);
         String tweetHref = profilePage.lastTweetLink.getAttribute("href");
         step("Like latest tweet visible", (step) -> {

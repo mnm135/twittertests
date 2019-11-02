@@ -29,18 +29,23 @@ public class FollowingPage extends BasePage {
     @FindBy(xpath = "//div[@data-testid='confirmationSheetConfirm']")
     public WebElement confirmUnfollow;
 
+    @FindAll({@FindBy(xpath = "//div[@data-testid='primaryColumn']//span//ancestor::div[@data-testid='UserCell']//div[@role='button']")})
+    public List<WebElement> followButtonsList;
+
 
     public FollowingPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
+    //@fixme change template to match position selector
     public WebElement getFollowedUserCellByPosition(int position) {
         return driver.findElement(By.xpath(String.format(FOLLOWED_ACCOUNT_CELL_TEMPLATE, position)));
     }
 
     public void unFollowUserByPosition(int position) {
-        driver.findElement(By.xpath(String.format(FOLLOW_UNFOLLOW_BUTTON_TEMPLATE, position))).click();
+        followButtonsList.get(position).click();
+        confirmUnfollow.click();
     }
 
     public WebElement getAccountCellByUserId(String userId) {
