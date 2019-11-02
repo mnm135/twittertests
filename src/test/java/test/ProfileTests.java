@@ -20,7 +20,6 @@ class ProfileTests extends BaseTest {
     private EditProfileComponent editProfileComponent;
     private FollowingPage followingPage;
     private LikesComponent likesComponent;
-    private TweetPage tweetPage;
     private TweetComposePage tweetComposePage;
 
     @Step("Open edit profile form")
@@ -53,17 +52,13 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-
         openEditProfileComponentFromHomePage();
-
         editProfileComponent.editProfileData(name, bio, location, website);
-
         editProfileComponent.verifyDataInEditForm(
                 name.substring(0, EditProfileComponent.NAME_MAX_LENGTH),
                 bio.substring(0,EditProfileComponent.BIO_MAX_LENGTH),
                 location.substring(0,EditProfileComponent.LOCATION_MAX_LENGTH),
                 website);
-
         editProfileComponent.saveProfileButton.click();
         profilePage.verifyUserDataIsCorrect(
                 name.substring(0, EditProfileComponent.NAME_MAX_LENGTH),
@@ -77,21 +72,16 @@ class ProfileTests extends BaseTest {
             "multi\\nline\\nbio",
             "more\\nnew\\nlines\\n:)"
     })
-
     void userCanAddMultiLineBio(String bio) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-
         final String name = "default name";
         final String location = "default location";
         final String website = "www.google.pl";
-
         openEditProfileComponentFromHomePage();
-
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
         editProfileComponent.editProfileData(name, formattedBio, location, website);
-
         editProfileComponent.verifyDataInEditForm(
                 name,
                 bio,
@@ -100,7 +90,6 @@ class ProfileTests extends BaseTest {
 
         editProfileComponent.saveProfileButton.click();
         profilePage.waitForEditPageToDisappear();
-        //driver.navigate().refresh();
         profilePage.verifyUserDataIsCorrect(
                 name,
                 bio,
@@ -114,7 +103,6 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-
         homePage.searchAndGoToUserPage(userId);
         profilePage.waitForUserPageToBeOpen(userId);
         homePage.followCurrentUser();
@@ -122,7 +110,7 @@ class ProfileTests extends BaseTest {
         profilePage.followingButton.click();
         profilePage.verifyUserIsVisibleInFollowing(userId);
 
-        //cleanFollows();
+        cleanFollows();
     }
 
     @ParameterizedTest
@@ -132,12 +120,10 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
-
         homePage.searchAndGoToUserPage(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
         profilePage.followingButton.click();
-
         step("Verify that user is displayed as followed", (step) -> {
             Assertions.assertTrue(followingPage.followedAccountCell.isDisplayed());
             Assertions.assertEquals(followingPage.followButton.getText(), "Following");
@@ -149,7 +135,6 @@ class ProfileTests extends BaseTest {
         step("Verify that button changes its text from Following to Follow", (step) -> {
             Assertions.assertEquals(followingPage.followButton.getText(), "Follow");
         });
-
         followingPage.verifyThatUserIsNoLongerFollowed(userId);
     }
 
@@ -161,8 +146,8 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
         likesComponent = new LikesComponent(driver);
-
         homePage.searchAndGoToUserPage(userId);
+        profilePage.waitForUserPageToBeOpen(userId);
         profilePage.scrollToElement(profilePage.lastTweet);
         String tweetHref = profilePage.lastTweetLink.getAttribute("href");
         step("Like latest tweet visible", (step) -> {
@@ -174,6 +159,8 @@ class ProfileTests extends BaseTest {
             profilePage.likesNavigationButton.click();
             likesComponent.verifyThatTweetIsVisibleByHref(tweetHref);
         });
+
+        cleanLikes();
     }
 
     //@TODO move to tweeting tests?
@@ -184,18 +171,18 @@ class ProfileTests extends BaseTest {
         tweetComposePage = new TweetComposePage(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
-
         homePage.startAddingTweetProcess();
         tweetComposePage.writeTweet(tweetContent);
         tweetComposePage.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
-
         homePage.profileLink.click();
         Thread.sleep(1000);
         step("Verify that previously added tweet is visible on profile page", (step) -> {
             profilePage.scrollToElement(profilePage.lastTweet);
             Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
         });
+
+        cleanTweets();
 
     }
 
@@ -207,26 +194,12 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-
         homePage.profileLink.click();
         profilePage.editProfileButton.click();
         profilePage.waitForElement(editProfileComponent.editProfileWindow);
-
         //@TODO change to relative paths
         editProfileComponent.changeAvatarPhoto("C:\\Users\\Emil\\IdeaProjects\\twittertests\\src\\test\\resources\\sample_avatar_photo.png");
         editProfileComponent.changeBannerPhoto("C:\\Users\\Emil\\IdeaProjects\\twittertests\\src\\test\\resources\\sample_banner_photo.png");
-    }
-
-    @Disabled
-    @Test
-    void userCantChangeProfilePhotosWithWrongFormat() {
-        //infinite loader solution on twitter side, no point to write it
-    }
-
-    @Disabled
-    @Test
-    void userCantChangeProfilePhotosWithTooBigFiles() {
-        //infinite loader solution on twitter side, no point to write it
     }
 
     @ParameterizedTest(name = "User can't set his website using wrong www format")
@@ -238,7 +211,6 @@ class ProfileTests extends BaseTest {
         final String name = "default name";
         final String location = "default location";
         final String bio = "just random bio";
-
         homePage.profileLink.click();
         profilePage.editProfileButton.click();
         profilePage.waitForElement(editProfileComponent.editProfileWindow);
@@ -247,13 +219,4 @@ class ProfileTests extends BaseTest {
         Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
         Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
     }
-/*
-    @AfterAll
-    void cleanTestData() {
-        cleanTweets();
-        cleanLikes();
-        cleanFollows();
-    }
-
- */
 }

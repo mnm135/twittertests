@@ -20,18 +20,8 @@ public class TweetComposePage extends BasePage {
     public WebElement sendTweetButton;
     @FindBy(xpath = "//div[@aria-label='Add emoji']")
     public WebElement addEmojiButton;
-    @FindBy(xpath = "//div[@aria-label='Add poll']")
-    public WebElement addPollButton;
-    @FindBy(xpath = "//div[@aria-label='Add a GIF']")
-    public WebElement addGifButton;
-    @FindBy(xpath = "//div[@aria-label='Add photos or video']")
-    public WebElement addPhotoButton;
-    @FindBy(xpath = "//div[@aria-label='Close']")
-    public WebElement closeWindowIcon;
-
     @FindBy(xpath = "(//*[@aria-label='Tweet text'])[2]")
     public WebElement multiTweet2ndTextArea;
-
     @FindBy(xpath = "//span[@style='background-color: rgb(255, 184, 194);']")
     public WebElement textOverLimit;
 

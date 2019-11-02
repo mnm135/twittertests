@@ -39,18 +39,17 @@ class SendTwitterTests extends BaseTest {
         tweetComposePage = new TweetComposePage(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
-
         homePage.profileLink.click();
         String userName = profilePage.userName.getText();
         String userAccountName = profilePage.userAccountName.getText();
-
         homePage.startAddingTweetProcess();
         tweetComposePage.writeAndSendTweet(tweetContent);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.verifyThatAddedTweetWasAddedSuccessfully(tweetContent);
         homePage.openTweetByPosition(0);
         tweetPage.verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(tweetContent, userName, userAccountName);
-        //tweetPage.deleteTweet();
+
+        cleanTweets();
     }
 
     @ParameterizedTest(name = "User is not able add too long tweet")
@@ -67,7 +66,6 @@ class SendTwitterTests extends BaseTest {
         });
     }
 
-    //@TODO add handling more than one emoji per tweet
     @ParameterizedTest(name = "User is able to send tweet with emoji")
     @CsvSource({
             "this is tweet with emoji, Grinning face, https://abs-0.twimg.com/emoji/v2/svg/1f600.svg",
@@ -88,10 +86,10 @@ class SendTwitterTests extends BaseTest {
         step("Verify that emojij is displayed correctly in tweet", (step) -> {
             Assertions.assertEquals(tweetPage.emojiInTweet.getAttribute("src"), emojiUrl);
         });
-        //tweetPage.deleteTweet();
+
+        cleanTweets();
     }
 
-    //@TODO add handling more than one chained tweet
     @ParameterizedTest(name = "User is able to add multiple chained tweets")
     @CsvSource({
             "asdd, zxcd",
@@ -115,12 +113,12 @@ class SendTwitterTests extends BaseTest {
             Assertions.assertEquals(tweetPage.tweetContent.getText(), firstTweetText);
             Assertions.assertEquals(tweetPage.multiTweet2ndTweetContent.getText(), secondTweetText);
         });
+        cleanTweets();
     }
 
-    @ParameterizedTest(name = "")
+    @ParameterizedTest(name = "User can send tweet with external page link")
     @CsvSource({
-            "https://www.netguru.com/, Netguru – Custom software development company",
-            "https://www.wikipedia.org/, Wikipedia"
+            "https://www.netguru.com/, Netguru – Custom software development company"
     })
     void userCanAddLinkToExternalPage(String link, String pageTitle) {
         homePage = new HomePage(driver);
@@ -135,9 +133,9 @@ class SendTwitterTests extends BaseTest {
             Assertions.assertEquals(pageTitle, driver.getTitle());
         });
 
+        cleanTweets();
     }
 
-    //@TODO add handling more than one hashtag
     @ParameterizedTest(name = "User is able to add tweet with hashtag")
     @CsvSource({
             "tweet with hashtag, #has",
@@ -150,9 +148,9 @@ class SendTwitterTests extends BaseTest {
         homePage.startAddingTweetProcess();
         tweetComposePage.writeTweet((String.format("%s %s", tweetText, hashtag)));
         tweetComposePage.tweetTextArea.sendKeys(Keys.SPACE);
+        tweetComposePage.waitForElementToBeClickable(tweetComposePage.sendTweetButton);
         tweetComposePage.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
-
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
             Assertions.assertEquals(tweetPage.tweetContent.getText().trim(), tweetText.trim());
@@ -162,6 +160,8 @@ class SendTwitterTests extends BaseTest {
             tweetPage.hashTagInTweet.click();
             Assertions.assertEquals(homePage.searchInput.getAttribute("value"), hashtag);
         });
+
+        cleanTweets();
     }
 
     @ParameterizedTest(name = "User can mention other user in his tweet")
@@ -170,7 +170,6 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposePage = new TweetComposePage(driver);
         tweetPage = new TweetPage(driver);
-
         homePage.startAddingTweetProcess();
         tweetComposePage.writeTweet(tweetText);
         tweetComposePage.addUserMention(userMention);
@@ -184,16 +183,7 @@ class SendTwitterTests extends BaseTest {
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
             Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
         });
-        //tweetPage.deleteTweet();
-    }
 
-    /*
-    @AfterAll
-    void cleanTestData() {
         cleanTweets();
-        cleanLikes();
-        cleanFollows();
     }
-
-     */
 }

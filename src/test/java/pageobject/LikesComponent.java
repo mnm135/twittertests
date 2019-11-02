@@ -16,10 +16,8 @@ public class LikesComponent extends BasePage {
 
     @FindBy(xpath = "(//article)[1]//a[contains(@href, 'status') and @role='link']")
     public WebElement lastTweetLink;
-
     @FindAll({@FindBy(xpath = "//article")})
     public List<WebElement> tweets;
-
     @FindBy(xpath = "(//article)[1]//div[@data-testid='unlike']")
     public WebElement lastTweetUnlikeButton;
 

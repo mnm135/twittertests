@@ -1,7 +1,6 @@
 package pageobject;
 
 import io.qameta.allure.Step;
-import org.apache.struts.config.ExceptionConfig;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +20,6 @@ public class ProfilePage extends BasePage {
 
     @FindBy(xpath = "//span[text()='Edit profile']")
     public WebElement editProfileButton;
-
     @FindBy(xpath = "//div[@data-testid='UserDescription']/span")
     public WebElement userBio;
     @FindBy(xpath = "(//div[@data-testid='UserProfileHeader_Items']//span)[3]")
@@ -32,11 +30,8 @@ public class ProfilePage extends BasePage {
     public WebElement userAccountName;
     @FindBy(xpath = "//h2[@role='heading']//span/span/span")
     public WebElement userName;
-
     @FindBy(xpath = "//span[text()='Following']")
     public WebElement followingButton;
-
-
     @FindAll({@FindBy(xpath = "//article")})
     public List<WebElement> tweets;
     @FindBy(xpath = "(//article)[1]")
@@ -45,13 +40,10 @@ public class ProfilePage extends BasePage {
     public WebElement lastTweetContent;
     @FindBy(xpath = "(//article)[1]//div[@data-testid='like']")
     public WebElement lastTweetLikeButton;
-
     @FindBy(xpath = "(//div[@role='tablist'])[2]//span[text()='Likes']")
     public WebElement likesNavigationButton;
-
     @FindBy(xpath = "(//article)[1]//a[contains(@href, 'status') and @role='link']")
     public WebElement lastTweetLink;
-
 
     public ProfilePage(WebDriver driver) {
         this.driver = driver;

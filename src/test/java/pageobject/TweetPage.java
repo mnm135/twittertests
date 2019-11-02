@@ -23,7 +23,6 @@ public class TweetPage extends BasePage {
     public WebElement timeAndDate;
     @FindBy(xpath = "(//article/div//div[3]//span)//img")
     public WebElement emojiInTweet;
-
     @FindBy(xpath = "(//article/div//div[3]//span)[2]/a")
     public WebElement hashTagInTweet;
     @FindBy(xpath = "(//div[@aria-label='More'])[1]")

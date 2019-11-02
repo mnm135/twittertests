@@ -11,7 +11,6 @@ import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import javax.swing.*;
 import java.util.List;
 
 public class HomePage extends BasePage {
@@ -22,23 +21,14 @@ public class HomePage extends BasePage {
     public WebElement composeTweetLink;
     @FindBy(xpath = "//a[@aria-label='Profile']/div")
     public WebElement profileLink;
-    @FindAll({@FindBy(xpath = "//section[contains(@aria-labelledby, 'accessible-list')]//article")})
-    public List<WebElement> visibleTweets;
     @FindBy(xpath = "((//div[@data-testid='tweet'])[1]/div[2]//span)[5]")
     public WebElement lastTweet;
     @FindBy(xpath = "//span[contains(text(), ' sent.')]")
     public WebElement tweetSuccessfullySentNotification;
-
     @FindAll({@FindBy(xpath = "//div[@data-testid='tweet']")})
     public List<WebElement> tweets;
-
     @FindBy(xpath = "//input[@aria-label='Search query']")
     public WebElement searchInput;
-    @FindBy(xpath = "(//div[@data-testid='TypeaheadUser'])[1]/div")
-    public WebElement firstFoundResult;
-    @FindBy(xpath = "(//div[contains(@data-testid, '-follow')])[1]")
-    public WebElement followButton;
-
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -83,7 +73,6 @@ public class HomePage extends BasePage {
     }
 
     //separate method to avoid StaleElementException after reloading page
-    //@TODO can be written nicer
     @Step("Add current user to following")
     public void followCurrentUser() {
         try {

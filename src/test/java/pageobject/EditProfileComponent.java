@@ -6,8 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class EditProfileComponent extends BasePage {
 
@@ -58,8 +56,6 @@ public class EditProfileComponent extends BasePage {
         scrollToElement(locationInput);
         websiteInput.clear();
         websiteInput.sendKeys(website);
-        //saveProfileButton.click();
-        //waitForElementToDisappear(editProfileWindow);
     }
 
     public void changeBannerPhoto(String photoPath) {
@@ -81,5 +77,4 @@ public class EditProfileComponent extends BasePage {
         scrollToElement(websiteInput);
         Assertions.assertEquals(websiteInput.getAttribute("value"), website);
     }
-
 }
