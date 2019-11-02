@@ -14,11 +14,15 @@ public class EditProfileComponent extends BasePage {
     public static final int LOCATION_MAX_LENGTH = 30;
     public static final int WEBSITE_MAX_LENGTH = 100;
 
+    public static final String DEFAULT_NAME = "default name";
+    public static final String DEFAULT_BIO = "default bio";
+    public static final String DEFAULT_LOCATION = "Warsaw";
+    public static final String DEFAULT_WEBSITE = "www.google.pl";
+
     @FindBy(xpath = "//div[@aria-labelledby='modal-header']")
     public WebElement editProfileWindow;
     @FindBy(xpath = "//div[@aria-labelledby='modal-header']//span[text()='Edit profile']")
     public WebElement editProfileLabel;
-
     @FindBy(xpath = "//input[@name='name']")
     public WebElement nameInput;
     @FindBy(xpath = "//textarea[@name='description']")
@@ -27,15 +31,12 @@ public class EditProfileComponent extends BasePage {
     public WebElement locationInput;
     @FindBy(xpath = "//input[@name='url']")
     public WebElement websiteInput;
-
     @FindBy(xpath = "(//input[@type='file'])[1]")
     public WebElement addBannerPhotoInput;
     @FindBy(xpath = "(//input[@type='file'])[2]")
     public WebElement addAvatarPhotoInput;
-
     @FindBy(xpath = "//span[text()='Save']")
     public WebElement saveProfileButton;
-
     @FindBy(xpath = "//span[text()='Url is not valid']")
     public WebElement incorrectUrlMessage;
 
@@ -58,10 +59,12 @@ public class EditProfileComponent extends BasePage {
         websiteInput.sendKeys(website);
     }
 
+    @Step("Change banner photo")
     public void changeBannerPhoto(String photoPath) {
         addBannerPhotoInput.sendKeys(photoPath);
     }
 
+    @Step("Change avatar photo")
     public void changeAvatarPhoto(String photoPath) {
         addAvatarPhotoInput.sendKeys(photoPath);
     }

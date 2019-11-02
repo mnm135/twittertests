@@ -20,7 +20,7 @@ class ProfileTests extends BaseTest {
     private EditProfileComponent editProfileComponent;
     private FollowingPage followingPage;
     private LikesComponent likesComponent;
-    private TweetComposePage tweetComposePage;
+    private TweetComposeComponent tweetComposeComponent;
 
     @Step("Open edit profile form")
     private void openEditProfileComponentFromHomePage() {
@@ -76,25 +76,23 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-        final String name = "default name";
-        final String location = "default location";
-        final String website = "www.google.pl";
         openEditProfileComponentFromHomePage();
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
-        editProfileComponent.editProfileData(name, formattedBio, location, website);
+        editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, formattedBio,
+                EditProfileComponent.DEFAULT_LOCATION, EditProfileComponent.DEFAULT_WEBSITE);
         editProfileComponent.verifyDataInEditForm(
-                name,
+                EditProfileComponent.DEFAULT_NAME,
                 bio,
-                location,
-                website);
+                EditProfileComponent.DEFAULT_LOCATION,
+                EditProfileComponent.DEFAULT_WEBSITE);
 
         editProfileComponent.saveProfileButton.click();
         profilePage.waitForEditPageToDisappear();
         profilePage.verifyUserDataIsCorrect(
-                name,
+                EditProfileComponent.DEFAULT_NAME,
                 bio,
-                location,
-                website);
+                EditProfileComponent.DEFAULT_LOCATION,
+                EditProfileComponent.DEFAULT_WEBSITE);
     }
 
     @ParameterizedTest(name = "User can see in his profile other users that he's following")
@@ -168,12 +166,12 @@ class ProfileTests extends BaseTest {
     @CsvSource({"asd 123", "drugi tweet"})
     void userCanSeeHisTweetsOnProfilePage(String tweetContent) throws InterruptedException {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet(tweetContent);
-        tweetComposePage.sendTweetButton.click();
+        tweetComposeComponent.writeTweet(tweetContent);
+        tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.profileLink.click();
         Thread.sleep(1000);
@@ -208,13 +206,11 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
-        final String name = "default name";
-        final String location = "default location";
-        final String bio = "just random bio";
         homePage.profileLink.click();
         profilePage.editProfileButton.click();
         profilePage.waitForElement(editProfileComponent.editProfileWindow);
-        editProfileComponent.editProfileData(name, bio, location, website);
+        editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, EditProfileComponent.DEFAULT_BIO,
+                EditProfileComponent.DEFAULT_LOCATION, website);
         editProfileComponent.saveProfileButton.click();
         Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
         Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());

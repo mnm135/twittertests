@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class TweetComposePage extends BasePage {
+public class TweetComposeComponent extends BasePage {
 
     private static final String TEMPLATE = "//div[@aria-label='%s']";
 
@@ -25,7 +25,7 @@ public class TweetComposePage extends BasePage {
     @FindBy(xpath = "//span[@style='background-color: rgb(255, 184, 194);']")
     public WebElement textOverLimit;
 
-    public TweetComposePage(WebDriver driver) {
+    public TweetComposeComponent(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
@@ -48,6 +48,7 @@ public class TweetComposePage extends BasePage {
         driver.findElement(By.xpath("//body")).click();
     }
 
+    @Step("Add {0} user mention")
     public void addUserMention(String userName) {
         tweetTextArea.sendKeys(" ");
         tweetTextArea.sendKeys(userName);

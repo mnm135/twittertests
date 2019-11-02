@@ -6,15 +6,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import pageobject.LoginPage;
+import pageobject.*;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
     WebDriver driver;
     LoginPage loginPage;
+    ProfilePage profilePage;
+    TweetPage tweetPage;
+    HomePage homePage;
+    LikesComponent likesComponent;
+    FollowingPage followingPage;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +32,6 @@ public class BaseTest {
         options.addArguments("--disable-gpu");
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
         login();
     }
 
@@ -42,6 +45,58 @@ public class BaseTest {
 
     @AfterEach
     void cleanUp() {
-        //driver.close();
+        driver.quit();
+    }
+
+    protected void cleanTweets() {
+        profilePage = new ProfilePage(driver);
+        tweetPage = new TweetPage(driver);
+        homePage = new HomePage(driver);
+
+        if (driver.getCurrentUrl().contains("twitter")) {
+            homePage.profileLink.click();
+        } else {
+            driver.get("https://twitter.com");
+            homePage.profileLink.click();
+        }
+        profilePage.waitForElement(profilePage.editProfileButton);
+        while (profilePage.tweets.size() > 0) {
+            profilePage.scrollToElement(profilePage.lastTweet);
+            profilePage.lastTweet.click();
+            tweetPage.deleteTweet();
+            homePage.profileLink.click();
+        }
+    }
+
+    protected void cleanLikes() {
+        profilePage = new ProfilePage(driver);
+        tweetPage = new TweetPage(driver);
+        homePage = new HomePage(driver);
+        likesComponent = new LikesComponent(driver);
+
+        homePage.profileLink.click();
+        profilePage.likesNavigationButton.click();
+        while(likesComponent.tweets.size() > 0) {
+            likesComponent.scrollToElement(likesComponent.lastTweetUnlikeButton);
+            likesComponent.lastTweetUnlikeButton.click();
+            driver.navigate().refresh();
+        }
+    }
+
+    protected void cleanFollows() {
+        profilePage = new ProfilePage(driver);
+        tweetPage = new TweetPage(driver);
+        homePage = new HomePage(driver);
+        followingPage = new FollowingPage(driver);
+
+        homePage.profileLink.click();
+        profilePage.followingButton.click();
+        int noOfFollowedUsers = followingPage.followButtonsList.size();
+        if(noOfFollowedUsers > 0) {
+            for (int i=0; i<noOfFollowedUsers; i++) {
+                followingPage.scrollToElement(followingPage.followButtonsList.get(i));
+                followingPage.unFollowUserByPosition(i);
+            }
+        }
     }
 }

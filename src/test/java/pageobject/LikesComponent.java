@@ -1,5 +1,6 @@
 package pageobject;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,6 +27,7 @@ public class LikesComponent extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @Step("Verify that tweet with {0} href is visible")
     public void verifyThatTweetIsVisibleByHref(String href) {
         scrollToElement(lastTweetLink);
         href = href.replace("https://twitter.com", "");

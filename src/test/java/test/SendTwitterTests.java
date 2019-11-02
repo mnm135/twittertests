@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.Keys;
 import pageobject.HomePage;
 import pageobject.ProfilePage;
-import pageobject.TweetComposePage;
+import pageobject.TweetComposeComponent;
 import pageobject.TweetPage;
 
 import static io.qameta.allure.Allure.step;
@@ -18,32 +18,32 @@ import static io.qameta.allure.Allure.step;
 class SendTwitterTests extends BaseTest {
 
     private HomePage homePage;
-    private TweetComposePage tweetComposePage;
+    private TweetComposeComponent tweetComposeComponent;
     private TweetPage tweetPage;
 
     @DisplayName("Tweet send button is disabled when the tweet text area is empty")
     @Test
     void tweetWindowIsDisabledWhenEmpty() {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         homePage.startAddingTweetProcess();
-        Assertions.assertEquals(tweetComposePage.sendTweetButton.getAttribute("aria-disabled"), "true");
-        tweetComposePage.writeTweet("a");
-        Assertions.assertEquals(tweetComposePage.sendTweetButton.getAttribute("aria-disabled"), null);
+        Assertions.assertEquals(tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"), "true");
+        tweetComposeComponent.writeTweet("a");
+        Assertions.assertEquals(tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"), null);
     }
 
     @ParameterizedTest(name = "User can successfully send tweets")
     @CsvFileSource(resources = "/tweetContent.csv", delimiter = ';')
     void userCanAddTweet(String tweetContent) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
         homePage.profileLink.click();
         String userName = profilePage.userName.getText();
         String userAccountName = profilePage.userAccountName.getText();
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeAndSendTweet(tweetContent);
+        tweetComposeComponent.writeAndSendTweet(tweetContent);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.verifyThatAddedTweetWasAddedSuccessfully(tweetContent);
         homePage.openTweetByPosition(0);
@@ -56,13 +56,13 @@ class SendTwitterTests extends BaseTest {
     @CsvFileSource(resources = "/tweetContent.csv", delimiter = ';')
     void userCantAddTooLongTweet(String tweetContent, String additionalCharacters) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet(tweetContent);
-        tweetComposePage.writeTweet(additionalCharacters);
+        tweetComposeComponent.writeTweet(tweetContent);
+        tweetComposeComponent.writeTweet(additionalCharacters);
         step("Verify that text over tweet limit is highlighted", (step) -> {
-            Assertions.assertEquals(tweetComposePage.textOverLimit.getText(), additionalCharacters);
+            Assertions.assertEquals(tweetComposeComponent.textOverLimit.getText(), additionalCharacters);
         });
     }
 
@@ -73,12 +73,12 @@ class SendTwitterTests extends BaseTest {
     })
     void userCanAddTweetWithEmoji(String tweetText, String emojiName, String emojiUrl) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet(tweetText);
-        tweetComposePage.addEmojiByName(emojiName);
-        tweetComposePage.sendTweetButton.click();
+        tweetComposeComponent.writeTweet(tweetText);
+        tweetComposeComponent.addEmojiByName(emojiName);
+        tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         //@todo separte method for this assert
@@ -98,14 +98,14 @@ class SendTwitterTests extends BaseTest {
     })
     void userCanAddMultiTweet(String firstTweetText, String secondTweetText) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet(firstTweetText);
+        tweetComposeComponent.writeTweet(firstTweetText);
         step("Add another chained tweet", (step) -> {
-            tweetComposePage.multiTweetButton.click();
-            tweetComposePage.multiTweet2ndTextArea.sendKeys(secondTweetText);
-            tweetComposePage.sendTweetButton.click();
+            tweetComposeComponent.multiTweetButton.click();
+            tweetComposeComponent.multiTweet2ndTextArea.sendKeys(secondTweetText);
+            tweetComposeComponent.sendTweetButton.click();
         });
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
@@ -122,10 +122,10 @@ class SendTwitterTests extends BaseTest {
     })
     void userCanAddLinkToExternalPage(String link, String pageTitle) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeAndSendTweet(link);
+        tweetComposeComponent.writeAndSendTweet(link);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         homePage.switchToNewTab();
@@ -143,13 +143,13 @@ class SendTwitterTests extends BaseTest {
     })
     void userCanAddTweetWithHashtag(String tweetText, String hashtag) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet((String.format("%s %s", tweetText, hashtag)));
-        tweetComposePage.tweetTextArea.sendKeys(Keys.SPACE);
-        tweetComposePage.waitForElementToBeClickable(tweetComposePage.sendTweetButton);
-        tweetComposePage.sendTweetButton.click();
+        tweetComposeComponent.writeTweet((String.format("%s %s", tweetText, hashtag)));
+        tweetComposeComponent.tweetTextArea.sendKeys(Keys.SPACE);
+        tweetComposeComponent.waitForElementToBeClickable(tweetComposeComponent.sendTweetButton);
+        tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
@@ -168,12 +168,12 @@ class SendTwitterTests extends BaseTest {
     @CsvSource({"asd, @Emil08345731"})
     void userCanSendTweetWithUserMention(String tweetText, String userMention) {
         homePage = new HomePage(driver);
-        tweetComposePage = new TweetComposePage(driver);
+        tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         homePage.startAddingTweetProcess();
-        tweetComposePage.writeTweet(tweetText);
-        tweetComposePage.addUserMention(userMention);
-        tweetComposePage.sendTweetButton.click();
+        tweetComposeComponent.writeTweet(tweetText);
+        tweetComposeComponent.addUserMention(userMention);
+        tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
