@@ -54,13 +54,12 @@ public class HomePage extends BasePage {
 
     @Step("Verify that tweed was added successfully")
     public void verifyThatAddedTweetWasAddedSuccessfully(String tweetContent) {
-        Assertions.assertEquals(lastTweet.getText(), tweetContent);
+        Assertions.assertEquals(tweetContent, lastTweet.getText());
         Assertions.assertTrue(tweetSuccessfullySentNotification.isDisplayed());
     }
 
     @Step("Find and go to {0} user profile page")
     public void searchAndGoToUserPage(String userId) {
-        Actions actions = new Actions(driver);
         searchInput.sendKeys(userId);
         WebElement element = driver.findElement(By.xpath(String.format(SEARCH_RESULT_TEMPLATE, userId)));
         waitForElement(element);

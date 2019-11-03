@@ -53,9 +53,9 @@ public class ProfilePage extends BasePage {
     @Step("Verify edited user data is correctly reflected on user profile page")
     public void verifyUserDataIsCorrect(String name, String bio, String location, String website) {
         Assertions.assertTrue(driver.findElement(By.xpath(String.format(USERNAME_TEMPLATE, name))).isDisplayed());
-        Assertions.assertEquals(userBio.getText().replaceAll("(\\r|\\n|\\r\\n)+", "\\\\n"), bio);
-        Assertions.assertEquals(userLocation.getText(), location);
-        Assertions.assertEquals(userWebsite.getText(), website.substring(4));
+        Assertions.assertEquals(bio, userBio.getText().replaceAll("(\\r|\\n|\\r\\n)+", "\\\\n"));
+        Assertions.assertEquals(location, userLocation.getText());
+        Assertions.assertEquals(website.substring(4), userWebsite.getText());
     }
 
     @Step("Verify {0} user is visible as followed")

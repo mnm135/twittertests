@@ -45,14 +45,14 @@ public class TweetPage extends BasePage {
 
     @Step("Verify that tweet contains correct content and user data")
     public void verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(String tweetText, String userName, String userAccountName) {
-        Assertions.assertEquals(authorAccountName.getText(), userAccountName);
-        Assertions.assertEquals(authorName.getText(), userName);
-        Assertions.assertEquals(tweetContent.getText(), tweetText);
+        Assertions.assertEquals(userAccountName, authorAccountName.getText());
+        Assertions.assertEquals(userName, authorName.getText());
+        Assertions.assertEquals(tweetText, tweetContent.getText());
         Assertions.assertTrue(timeAndDate.getText().contains(Datehelper.getCurrentDate()));
     }
 
     @Step("Verify that tweet contains correct text")
     public void verifyThatTweetTextIsCorrectlyDisplayed(String tweetText) {
-        Assertions.assertEquals(tweetContent.getText(), tweetText);
+        Assertions.assertEquals(tweetText, tweetContent.getText());
     }
 }

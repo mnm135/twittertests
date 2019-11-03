@@ -57,12 +57,12 @@ public class EditProfileComponent extends BasePage {
     @Step("Verify edited values are correctly reflected in edit profile form")
     public void verifyDataInEditForm(String name, String bio, String location, String website) {
         scrollToElement(nameInput);
-        Assertions.assertEquals(nameInput.getAttribute("value"), name);
+        Assertions.assertEquals(name, nameInput.getAttribute("value"));
         scrollToElement(bioInput);
-        Assertions.assertEquals(bioInput.getAttribute("value").replaceAll("(\\r|\\n|\\r\\n)+", "\\\\n"), bio);
+        Assertions.assertEquals(bio, bioInput.getAttribute("value").replaceAll("(\\r|\\n|\\r\\n)+", "\\\\n"));
         scrollToElement(bioInput);
-        Assertions.assertEquals(locationInput.getAttribute("value"), location);
+        Assertions.assertEquals(location, locationInput.getAttribute("value"));
         scrollToElement(websiteInput);
-        Assertions.assertEquals(websiteInput.getAttribute("value"), website);
+        Assertions.assertEquals(website, websiteInput.getAttribute("value"));
     }
 }

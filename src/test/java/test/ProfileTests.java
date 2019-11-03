@@ -125,14 +125,14 @@ class ProfileTests extends BaseTest {
         profilePage.followingButton.click();
         step("Verify that user is displayed as followed", (step) -> {
             Assertions.assertTrue(followingPage.followedAccountCell.isDisplayed());
-            Assertions.assertEquals(followingPage.followButton.getText(), "Following");
+            Assertions.assertEquals("Following", followingPage.followButton.getText());
         });
         step("Unfollow user", (step) -> {
             followingPage.followButton.click();
             followingPage.confirmUnfollow.click();
         });
         step("Verify that button changes its text from Following to Follow", (step) -> {
-            Assertions.assertEquals(followingPage.followButton.getText(), "Follow");
+            Assertions.assertEquals("Follow", followingPage.followButton.getText());
         });
         followingPage.verifyThatUserIsNoLongerFollowed(userId);
     }
@@ -177,7 +177,7 @@ class ProfileTests extends BaseTest {
         homePage.profileLink.click();
         step("Verify that previously added tweet is visible on profile page", (step) -> {
             profilePage.scrollToElement(profilePage.lastTweet);
-            Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
+            Assertions.assertEquals(tweetContent, profilePage.lastTweetContent.getText());
         });
         cleanTweets();
     }

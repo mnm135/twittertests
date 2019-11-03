@@ -24,9 +24,9 @@ class SendTwitterTests extends BaseTest {
         tweetComposeComponent = new TweetComposeComponent(driver);
 
         homePage.startAddingTweetProcess();
-        Assertions.assertEquals(tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"), "true");
+        Assertions.assertEquals("true", tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"));
         tweetComposeComponent.writeTweet("a");
-        Assertions.assertEquals(tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"), null);
+        Assertions.assertEquals(null, tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"));
     }
 
     @ParameterizedTest(name = "User can successfully send tweets")
@@ -61,7 +61,7 @@ class SendTwitterTests extends BaseTest {
         tweetComposeComponent.writeTweet(tweetContent);
         tweetComposeComponent.writeTweet(additionalCharacters);
         step("Verify that text over tweet limit is highlighted", (step) -> {
-            Assertions.assertEquals(tweetComposeComponent.textOverLimit.getText(), additionalCharacters);
+            Assertions.assertEquals(additionalCharacters, tweetComposeComponent.textOverLimit.getText());
         });
     }
 
@@ -83,7 +83,7 @@ class SendTwitterTests extends BaseTest {
         homePage.openTweetByPosition(0);
         tweetPage.verifyThatTweetTextIsCorrectlyDisplayed(tweetText);
         step("Verify that emojij is displayed correctly in tweet", (step) -> {
-            Assertions.assertEquals(tweetPage.emojiInTweet.getAttribute("src"), emojiUrl);
+            Assertions.assertEquals(emojiUrl, tweetPage.emojiInTweet.getAttribute("src"));
         });
 
         cleanTweets();
@@ -110,8 +110,8 @@ class SendTwitterTests extends BaseTest {
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         step("Verify that all tweets were added correctly", (step) -> {
-            Assertions.assertEquals(tweetPage.tweetContent.getText(), firstTweetText);
-            Assertions.assertEquals(tweetPage.multiTweet2ndTweetContent.getText(), secondTweetText);
+            Assertions.assertEquals(firstTweetText, tweetPage.tweetContent.getText());
+            Assertions.assertEquals(secondTweetText, tweetPage.multiTweet2ndTweetContent.getText());
         });
         cleanTweets();
     }
@@ -155,12 +155,12 @@ class SendTwitterTests extends BaseTest {
         homePage.openTweetByPosition(0);
 
         step("Verify that tweet contains correct text and hashtag", (step) -> {
-            Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
-            Assertions.assertEquals(tweetPage.mediaInTweet.getText(), hashtag);
+            Assertions.assertEquals(tweetText + " ", tweetPage.tweetContent.getText());
+            Assertions.assertEquals(hashtag, tweetPage.mediaInTweet.getText());
         });
         step("Verify that user can search for similar tweets when clicking at hashtag", (step) -> {
             tweetPage.mediaInTweet.click();
-            Assertions.assertEquals(homePage.searchInput.getAttribute("value"), hashtag);
+            Assertions.assertEquals(hashtag, homePage.searchInput.getAttribute("value"));
         });
         cleanTweets();
     }
@@ -179,11 +179,11 @@ class SendTwitterTests extends BaseTest {
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
-            Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
-            Assertions.assertEquals(tweetPage.mediaInTweet.getText(), userMention);
+            Assertions.assertEquals(tweetText + " ", tweetPage.tweetContent.getText());
+            Assertions.assertEquals(userMention, tweetPage.mediaInTweet.getText());
         });
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
-            Assertions.assertEquals(tweetPage.mediaInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
+            Assertions.assertEquals(userMention.replace("@", "/"), tweetPage.mediaInTweet.getAttribute("href").replace("https://twitter.com", ""));
         });
         cleanTweets();
     }
