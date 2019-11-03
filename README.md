@@ -38,6 +38,7 @@ password=correctPassword
 ```
 - navigate to project directory
 - run following commands:
+
 to run tests:
 ```
 mvn clean test
@@ -69,7 +70,7 @@ Project contains tests of two twitter features with following cases:
     - Added tweets are visible on profile page
     - User can't set his website using wrong www format
 
-## Allure results screenshots:
+#### Allure reports screenshots
 ![alt text](https://i.imgur.com/EwVDFF8.png) ![alt text](https://i.imgur.com/dAaKuBv.png)
 ![alt text](https://i.imgur.com/zLFqiJs.png) ![alt text](https://i.imgur.com/rLucwgt.png)
 ![alt text](https://i.imgur.com/4NYcmY8.png)
