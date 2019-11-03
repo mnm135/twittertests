@@ -164,7 +164,7 @@ class ProfileTests extends BaseTest {
 
     @ParameterizedTest(name = "Added tweets are visible on profile page")
     @CsvSource({"asd 123", "drugi tweet"})
-    void userCanSeeHisTweetsOnProfilePage(String tweetContent) throws InterruptedException {
+    void userCanSeeHisTweetsOnProfilePage(String tweetContent) {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
@@ -175,7 +175,6 @@ class ProfileTests extends BaseTest {
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
 
         homePage.profileLink.click();
-        Thread.sleep(1000);
         step("Verify that previously added tweet is visible on profile page", (step) -> {
             profilePage.scrollToElement(profilePage.lastTweet);
             Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
