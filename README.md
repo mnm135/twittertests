@@ -37,13 +37,11 @@ username=correctUsername
 password=correctPassword
 ```
 - navigate to project directory
-- run following commands:
-
-to run tests:
+- run following command to run test:
 ```
 mvn clean test
 ```
-after that to open allure report locally:
+- after that run following command to open allure report locally:
 ```
 mvn allure:serve
 ```
