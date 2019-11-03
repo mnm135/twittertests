@@ -73,8 +73,11 @@ class ProfileTests extends BaseTest {
 
         openEditProfileComponentFromHomePage();
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
-        editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, formattedBio,
-                EditProfileComponent.DEFAULT_LOCATION, EditProfileComponent.DEFAULT_WEBSITE);
+        editProfileComponent.editProfileData(
+                EditProfileComponent.DEFAULT_NAME,
+                formattedBio,
+                EditProfileComponent.DEFAULT_LOCATION,
+                EditProfileComponent.DEFAULT_WEBSITE);
         editProfileComponent.verifyDataInEditForm(
                 EditProfileComponent.DEFAULT_NAME,
                 bio,
@@ -117,6 +120,7 @@ class ProfileTests extends BaseTest {
 
         homePage.searchAndGoToUserPage(userId);
         homePage.followCurrentUser();
+
         homePage.profileLink.click();
         profilePage.followingButton.click();
         step("Verify that user is displayed as followed", (step) -> {
@@ -155,7 +159,6 @@ class ProfileTests extends BaseTest {
             profilePage.likesNavigationButton.click();
             likesComponent.verifyThatTweetIsVisibleByHref(tweetHref);
         });
-
         cleanLikes();
     }
 
@@ -168,18 +171,16 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
 
         homePage.startAddingTweetProcess();
-        tweetComposeComponent.writeTweet(tweetContent);
-        tweetComposeComponent.sendTweetButton.click();
+        tweetComposeComponent.writeAndSendTweet(tweetContent);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
+
         homePage.profileLink.click();
         Thread.sleep(1000);
         step("Verify that previously added tweet is visible on profile page", (step) -> {
             profilePage.scrollToElement(profilePage.lastTweet);
             Assertions.assertEquals(profilePage.lastTweetContent.getText(), tweetContent);
         });
-
         cleanTweets();
-
     }
 
     @ParameterizedTest(name = "User can't set his website using wrong www format")
@@ -189,12 +190,14 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
 
-        homePage.profileLink.click();
-        profilePage.editProfileButton.click();
-        profilePage.waitForElement(editProfileComponent.editProfileWindow);
-        editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, EditProfileComponent.DEFAULT_BIO,
-                EditProfileComponent.DEFAULT_LOCATION, website);
+        openEditProfileComponentFromHomePage();
+        editProfileComponent.editProfileData(
+                EditProfileComponent.DEFAULT_NAME,
+                EditProfileComponent.DEFAULT_BIO,
+                EditProfileComponent.DEFAULT_LOCATION,
+                website);
         editProfileComponent.saveProfileButton.click();
+
         step("Verify that Edit form is not closed and incorrect url message is displayed", (step) -> {
             Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
             Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
