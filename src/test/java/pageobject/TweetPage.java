@@ -1,5 +1,6 @@
 package pageobject;
 
+import helper.Datehelper;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
@@ -24,7 +25,7 @@ public class TweetPage extends BasePage {
     @FindBy(xpath = "(//article/div//div[3]//span)//img")
     public WebElement emojiInTweet;
     @FindBy(xpath = "(//article/div//div[3]//span)[2]/a")
-    public WebElement hashTagInTweet;
+    public WebElement mediaInTweet;
     @FindBy(xpath = "(//div[@aria-label='More'])[1]")
     public WebElement moreIcon;
     @FindBy(xpath = "(//div[@role='menuitem'])[1]")
@@ -46,18 +47,16 @@ public class TweetPage extends BasePage {
         confirmDeleteButton.click();
     }
 
-    //@TODO move to helpers or whatever
-    public String getCurrentDate() {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
-        return formatter.format(date);
-    }
-
     @Step("Verify that tweet contains correct content and user data")
     public void verifyThatTweetDataIsCorrectlyDisplayedOnTweetPage(String tweetText, String userName, String userAccountName) {
         Assertions.assertEquals(authorAccountName.getText(), userAccountName);
         Assertions.assertEquals(authorName.getText(), userName);
         Assertions.assertEquals(tweetContent.getText(), tweetText);
-        Assertions.assertTrue(timeAndDate.getText().contains(getCurrentDate()));
+        Assertions.assertTrue(timeAndDate.getText().contains(Datehelper.getCurrentDate()));
+    }
+
+    @Step("Verify that tweet contains correct text")
+    public void verifyThatTweetTextIsCorrectlyDisplayed(String tweetText) {
+        Assertions.assertEquals(tweetContent.getText(), tweetText);
     }
 }

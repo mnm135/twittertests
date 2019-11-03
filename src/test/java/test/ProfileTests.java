@@ -15,13 +15,6 @@ import static io.qameta.allure.Allure.step;
 @Feature("User can mange his profile")
 class ProfileTests extends BaseTest {
 
-    private HomePage homePage;
-    private ProfilePage profilePage;
-    private EditProfileComponent editProfileComponent;
-    private FollowingPage followingPage;
-    private LikesComponent likesComponent;
-    private TweetComposeComponent tweetComposeComponent;
-
     @Step("Open edit profile form")
     private void openEditProfileComponentFromHomePage() {
         homePage.profileLink.click();
@@ -52,6 +45,7 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
+
         openEditProfileComponentFromHomePage();
         editProfileComponent.editProfileData(name, bio, location, website);
         editProfileComponent.verifyDataInEditForm(
@@ -76,6 +70,7 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
+
         openEditProfileComponentFromHomePage();
         String formattedBio = bio.replace("\\n", Keys.chord(Keys.SHIFT, Keys.ENTER));
         editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, formattedBio,
@@ -101,6 +96,7 @@ class ProfileTests extends BaseTest {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
+
         homePage.searchAndGoToUserPage(userId);
         profilePage.waitForUserPageToBeOpen(userId);
         homePage.followCurrentUser();
@@ -118,6 +114,7 @@ class ProfileTests extends BaseTest {
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
+
         homePage.searchAndGoToUserPage(userId);
         homePage.followCurrentUser();
         homePage.profileLink.click();
@@ -144,6 +141,7 @@ class ProfileTests extends BaseTest {
         editProfileComponent = new EditProfileComponent(driver);
         followingPage = new FollowingPage(driver);
         likesComponent = new LikesComponent(driver);
+
         homePage.searchAndGoToUserPage(userId);
         profilePage.waitForUserPageToBeOpen(userId);
         profilePage.scrollToElement(profilePage.lastTweet);
@@ -161,7 +159,6 @@ class ProfileTests extends BaseTest {
         cleanLikes();
     }
 
-    //@TODO move to tweeting tests?
     @ParameterizedTest(name = "Added tweets are visible on profile page")
     @CsvSource({"asd 123", "drugi tweet"})
     void userCanSeeHisTweetsOnProfilePage(String tweetContent) throws InterruptedException {
@@ -169,6 +166,7 @@ class ProfileTests extends BaseTest {
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet(tweetContent);
         tweetComposeComponent.sendTweetButton.click();
@@ -184,28 +182,13 @@ class ProfileTests extends BaseTest {
 
     }
 
-    @ParameterizedTest(name = "User can change his profile photos")
-    @CsvSource({
-            "Emil_new_name1, 1template bio, Warszawa, www.google.pl"
-    })
-    void userCanChangeProfilePhotos(String name, String bio, String location, String website) {
-        homePage = new HomePage(driver);
-        profilePage = new ProfilePage(driver);
-        editProfileComponent = new EditProfileComponent(driver);
-        homePage.profileLink.click();
-        profilePage.editProfileButton.click();
-        profilePage.waitForElement(editProfileComponent.editProfileWindow);
-        //@TODO change to relative paths
-        editProfileComponent.changeAvatarPhoto("C:\\Users\\Emil\\IdeaProjects\\twittertests\\src\\test\\resources\\sample_avatar_photo.png");
-        editProfileComponent.changeBannerPhoto("C:\\Users\\Emil\\IdeaProjects\\twittertests\\src\\test\\resources\\sample_banner_photo.png");
-    }
-
     @ParameterizedTest(name = "User can't set his website using wrong www format")
     @CsvSource({"www", "google", "www.www", "gooooooooooogle.pl.we......dk"})
     void userCantChangeHisWebsiteToWrongFormat(String website) {
         homePage = new HomePage(driver);
         profilePage = new ProfilePage(driver);
         editProfileComponent = new EditProfileComponent(driver);
+
         homePage.profileLink.click();
         profilePage.editProfileButton.click();
         profilePage.waitForElement(editProfileComponent.editProfileWindow);

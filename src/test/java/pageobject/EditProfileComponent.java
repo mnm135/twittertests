@@ -31,10 +31,6 @@ public class EditProfileComponent extends BasePage {
     public WebElement locationInput;
     @FindBy(xpath = "//input[@name='url']")
     public WebElement websiteInput;
-    @FindBy(xpath = "(//input[@type='file'])[1]")
-    public WebElement addBannerPhotoInput;
-    @FindBy(xpath = "(//input[@type='file'])[2]")
-    public WebElement addAvatarPhotoInput;
     @FindBy(xpath = "//span[text()='Save']")
     public WebElement saveProfileButton;
     @FindBy(xpath = "//span[text()='Url is not valid']")
@@ -57,16 +53,6 @@ public class EditProfileComponent extends BasePage {
         scrollToElement(locationInput);
         websiteInput.clear();
         websiteInput.sendKeys(website);
-    }
-
-    @Step("Change banner photo")
-    public void changeBannerPhoto(String photoPath) {
-        addBannerPhotoInput.sendKeys(photoPath);
-    }
-
-    @Step("Change avatar photo")
-    public void changeAvatarPhoto(String photoPath) {
-        addAvatarPhotoInput.sendKeys(photoPath);
     }
 
     @Step("Verify edited values are correctly reflected in edit profile form")

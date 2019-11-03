@@ -17,15 +17,12 @@ import static io.qameta.allure.Allure.step;
 @Feature("User can sent tweets")
 class SendTwitterTests extends BaseTest {
 
-    private HomePage homePage;
-    private TweetComposeComponent tweetComposeComponent;
-    private TweetPage tweetPage;
-
     @DisplayName("Tweet send button is disabled when the tweet text area is empty")
     @Test
     void tweetWindowIsDisabledWhenEmpty() {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
+
         homePage.startAddingTweetProcess();
         Assertions.assertEquals(tweetComposeComponent.sendTweetButton.getAttribute("aria-disabled"), "true");
         tweetComposeComponent.writeTweet("a");
@@ -39,6 +36,7 @@ class SendTwitterTests extends BaseTest {
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
         profilePage = new ProfilePage(driver);
+
         homePage.profileLink.click();
         String userName = profilePage.userName.getText();
         String userAccountName = profilePage.userAccountName.getText();
@@ -58,6 +56,7 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet(tweetContent);
         tweetComposeComponent.writeTweet(additionalCharacters);
@@ -75,14 +74,15 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet(tweetText);
         tweetComposeComponent.addEmojiByName(emojiName);
         tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
-        //@todo separte method for this assert
-        Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText);
+
+        tweetPage.verifyThatTweetTextIsCorrectlyDisplayed(tweetText);
         step("Verify that emojij is displayed correctly in tweet", (step) -> {
             Assertions.assertEquals(tweetPage.emojiInTweet.getAttribute("src"), emojiUrl);
         });
@@ -100,6 +100,7 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet(firstTweetText);
         step("Add another chained tweet", (step) -> {
@@ -124,6 +125,7 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeAndSendTweet(link);
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
@@ -145,6 +147,7 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet((String.format("%s %s", tweetText, hashtag)));
         tweetComposeComponent.tweetTextArea.sendKeys(Keys.SPACE);
@@ -152,12 +155,14 @@ class SendTwitterTests extends BaseTest {
         tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
-        step("Verify that tweet contains correct content", (step) -> {
-            Assertions.assertEquals(tweetPage.tweetContent.getText().trim(), tweetText.trim());
-            Assertions.assertEquals(tweetPage.hashTagInTweet.getText(), hashtag);
+
+        //tweetPage.verifyThatTweetTextIsCorrectlyDisplayed(tweetText);
+        Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
+        step("Verify that tweet contains correct hashtag", (step) -> {
+            Assertions.assertEquals(tweetPage.mediaInTweet.getText(), hashtag);
         });
         step("Verify that user can search for similar tweets when clicking at hashtag", (step) -> {
-            tweetPage.hashTagInTweet.click();
+            tweetPage.mediaInTweet.click();
             Assertions.assertEquals(homePage.searchInput.getAttribute("value"), hashtag);
         });
 
@@ -170,6 +175,7 @@ class SendTwitterTests extends BaseTest {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
         tweetPage = new TweetPage(driver);
+
         homePage.startAddingTweetProcess();
         tweetComposeComponent.writeTweet(tweetText);
         tweetComposeComponent.addUserMention(userMention);
@@ -178,10 +184,10 @@ class SendTwitterTests extends BaseTest {
         homePage.openTweetByPosition(0);
         step("Verify that tweet contains correct content", (step) -> {
             Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
-            Assertions.assertEquals(tweetPage.hashTagInTweet.getText(), userMention);
+            Assertions.assertEquals(tweetPage.mediaInTweet.getText(), userMention);
         });
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
-            Assertions.assertEquals(tweetPage.hashTagInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
+            Assertions.assertEquals(tweetPage.mediaInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
         });
 
         cleanTweets();

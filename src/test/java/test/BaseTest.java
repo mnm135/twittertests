@@ -7,18 +7,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import pageobject.*;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
     WebDriver driver;
-    LoginPage loginPage;
     ProfilePage profilePage;
     TweetPage tweetPage;
     HomePage homePage;
     LikesComponent likesComponent;
     FollowingPage followingPage;
+    EditProfileComponent editProfileComponent;
+    TweetComposeComponent tweetComposeComponent;
 
     @BeforeEach
     void setUp() {
@@ -36,10 +39,25 @@ public class BaseTest {
     }
 
     private void login() {
-        loginPage = new LoginPage(driver);
-        //@TODO move to pom
-        driver.get("https://twitter.com/login");
-
+        LoginPage loginPage = new LoginPage(driver);
+        try {
+            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("user.properties");
+            Properties properties = new Properties();
+            if (inputStream!=null) {
+                properties.load(inputStream);
+            } else {
+                throw new NullPointerException("user.properties file not found");
+            }
+            String username = properties.getProperty("username");
+            String password = properties.getProperty("password");
+            String url = properties.getProperty("loginpage");
+            driver.get(url);
+            loginPage.waitForLoginPageToLoad();
+            loginPage.loginInput.sendKeys(username);
+            loginPage.passwordInput.sendKeys(password);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         loginPage.loginButton.click();
     }
 
@@ -48,7 +66,7 @@ public class BaseTest {
         driver.quit();
     }
 
-    protected void cleanTweets() {
+    void cleanTweets() {
         profilePage = new ProfilePage(driver);
         tweetPage = new TweetPage(driver);
         homePage = new HomePage(driver);
@@ -68,7 +86,7 @@ public class BaseTest {
         }
     }
 
-    protected void cleanLikes() {
+    void cleanLikes() {
         profilePage = new ProfilePage(driver);
         tweetPage = new TweetPage(driver);
         homePage = new HomePage(driver);
@@ -83,7 +101,7 @@ public class BaseTest {
         }
     }
 
-    protected void cleanFollows() {
+    void cleanFollows() {
         profilePage = new ProfilePage(driver);
         tweetPage = new TweetPage(driver);
         homePage = new HomePage(driver);

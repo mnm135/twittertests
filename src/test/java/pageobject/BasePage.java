@@ -24,17 +24,12 @@ public class BasePage {
         wait.until(ExpectedConditions.visibilityOf(element));
     }
 
-    public void waitForElementToDisappear(WebElement element)  {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.invisibilityOf(element));
-    }
-
     public void waitForElementToBeClickable(WebElement element)  {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    protected void waitForMultipleElements(List<WebElement> listOfElements) {
+    public void waitForMultipleElements(List<WebElement> listOfElements) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfAllElements(listOfElements));
     }
