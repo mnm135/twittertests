@@ -10,7 +10,7 @@ Mac OS
 ```
 brew install allure
 ```
-Debian based linus:
+Debian based linux:
 ```
 sudo apt-add-repository ppa:qameta/allure
 sudo apt-get update
