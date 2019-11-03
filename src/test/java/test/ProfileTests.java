@@ -195,7 +195,9 @@ class ProfileTests extends BaseTest {
         editProfileComponent.editProfileData(EditProfileComponent.DEFAULT_NAME, EditProfileComponent.DEFAULT_BIO,
                 EditProfileComponent.DEFAULT_LOCATION, website);
         editProfileComponent.saveProfileButton.click();
-        Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
-        Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
+        step("Verify that Edit form is not closed and incorrect url message is displayed", (step) -> {
+            Assertions.assertTrue(editProfileComponent.editProfileLabel.isDisplayed());
+            Assertions.assertTrue(editProfileComponent.incorrectUrlMessage.isDisplayed());
+        });
     }
 }
