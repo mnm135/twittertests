@@ -61,7 +61,7 @@ class ProfileTests extends BaseTest {
                 website);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can add multi-line bio")
     @CsvSource({
             "multi\\nline\\nbio",
             "more\\nnew\\nlines\\n:)"
@@ -107,7 +107,7 @@ class ProfileTests extends BaseTest {
         cleanFollows();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "User can unfollow other accounts from his profile page")
     @CsvSource({"@netguru"})
     void userCanDeleteFollowsFromProfilePage(String userId) {
         homePage = new HomePage(driver);

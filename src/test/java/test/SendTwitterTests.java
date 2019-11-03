@@ -169,7 +169,7 @@ class SendTwitterTests extends BaseTest {
         cleanTweets();
     }
 
-    @ParameterizedTest(name = "User can mention other user in his tweet")
+    @ParameterizedTest(name = "User can @mention other user in his tweet")
     @CsvSource({"asd, @Emil08345731"})
     void userCanSendTweetWithUserMention(String tweetText, String userMention) {
         homePage = new HomePage(driver);
