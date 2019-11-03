@@ -30,7 +30,7 @@ class SendTwitterTests extends BaseTest {
     }
 
     @ParameterizedTest(name = "User can successfully send tweets")
-    @CsvFileSource(resources = "/tweetContent.csv", delimiter = ';')
+    @CsvFileSource(resources = "/testdata/tweetContent.csv", delimiter = ';')
     void userCanAddTweet(String tweetContent) {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
@@ -51,7 +51,7 @@ class SendTwitterTests extends BaseTest {
     }
 
     @ParameterizedTest(name = "User is not able add too long tweet")
-    @CsvFileSource(resources = "/tweetContent.csv", delimiter = ';')
+    @CsvFileSource(resources = "/testdata/tweetContent.csv", delimiter = ';')
     void userCantAddTooLongTweet(String tweetContent, String additionalCharacters) {
         homePage = new HomePage(driver);
         tweetComposeComponent = new TweetComposeComponent(driver);
