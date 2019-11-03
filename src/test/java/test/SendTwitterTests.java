@@ -81,7 +81,6 @@ class SendTwitterTests extends BaseTest {
         tweetComposeComponent.sendTweetButton.click();
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
-
         tweetPage.verifyThatTweetTextIsCorrectlyDisplayed(tweetText);
         step("Verify that emojij is displayed correctly in tweet", (step) -> {
             Assertions.assertEquals(tweetPage.emojiInTweet.getAttribute("src"), emojiUrl);
@@ -134,7 +133,6 @@ class SendTwitterTests extends BaseTest {
         step("Verify that link leads to a correct external page", (step) -> {
             Assertions.assertEquals(pageTitle, driver.getTitle());
         });
-
         cleanTweets();
     }
 
@@ -156,16 +154,14 @@ class SendTwitterTests extends BaseTest {
         homePage.waitForElement(homePage.tweetSuccessfullySentNotification);
         homePage.openTweetByPosition(0);
 
-        //tweetPage.verifyThatTweetTextIsCorrectlyDisplayed(tweetText);
-        Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
-        step("Verify that tweet contains correct hashtag", (step) -> {
+        step("Verify that tweet contains correct text and hashtag", (step) -> {
+            Assertions.assertEquals(tweetPage.tweetContent.getText(), tweetText + " ");
             Assertions.assertEquals(tweetPage.mediaInTweet.getText(), hashtag);
         });
         step("Verify that user can search for similar tweets when clicking at hashtag", (step) -> {
             tweetPage.mediaInTweet.click();
             Assertions.assertEquals(homePage.searchInput.getAttribute("value"), hashtag);
         });
-
         cleanTweets();
     }
 
@@ -189,7 +185,6 @@ class SendTwitterTests extends BaseTest {
         step("Verify that @mention contains correct url to access mentioned user's profile", (step) -> {
             Assertions.assertEquals(tweetPage.mediaInTweet.getAttribute("href").replace("https://twitter.com", ""), userMention.replace("@", "/"));
         });
-
         cleanTweets();
     }
 }
