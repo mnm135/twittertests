@@ -8,10 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public class TweetPage extends BasePage {
 
     @FindBy(xpath = "(//div[@data-testid='tweet']/div[2]//a//span)[2]")

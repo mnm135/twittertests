@@ -13,7 +13,6 @@ public class EditProfileComponent extends BasePage {
     public static final int BIO_MAX_LENGTH = 160;
     public static final int LOCATION_MAX_LENGTH = 30;
     public static final int WEBSITE_MAX_LENGTH = 100;
-
     public static final String DEFAULT_NAME = "default name";
     public static final String DEFAULT_BIO = "default bio";
     public static final String DEFAULT_LOCATION = "Warsaw";
