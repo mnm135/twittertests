@@ -6,11 +6,11 @@
 - Allure
 
 ###### Setting up Allure
-Mac OS
+*Mac OS*
 ```
 brew install allure
 ```
-Debian based linux:
+*Debian based linux:*
 ```
 sudo apt-add-repository ppa:qameta/allure
 sudo apt-get update
@@ -20,9 +20,10 @@ sudo apt-add-repository ppa:yandex-qatools/allure-framework
 sudo apt-get update
 sudo apt-get install allure-commandline
 ```
-Windows
+*Windows:*
 ```
 Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+
 Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
 
 scoop install allure
@@ -36,17 +37,18 @@ username=correctUsername
 password=correctPassword
 ```
 - navigate to project directory
-- run following commands
+- run following commands:
+to run tests:
 ```
 mvn clean test
 ```
-When te test execution is done run following command
+after that to open allure report locally:
 ```
 mvn allure:serve
 ```
-which opens allure report locally
 
 ## Project info
+#### What is tested
 Project contains tests of two twitter features with following cases:
 - Sending tweets
     - Tweet send button is disabled when the tweet text area is empty
@@ -66,3 +68,8 @@ Project contains tests of two twitter features with following cases:
     - User can see tweets he likes on his profile page
     - Added tweets are visible on profile page
     - User can't set his website using wrong www format
+
+## Allure results screenshots:
+![alt text](https://i.imgur.com/EwVDFF8.png) ![alt text](https://i.imgur.com/dAaKuBv.png)
+![alt text](https://i.imgur.com/zLFqiJs.png) ![alt text](https://i.imgur.com/rLucwgt.png)
+![alt text](https://i.imgur.com/4NYcmY8.png)
