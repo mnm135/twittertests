@@ -1,6 +1,6 @@
 # twittertests
 
-###### Prerequisites
+## Prerequisites
 - Java 12 or newer
 - Maven
 - Allure
@@ -28,7 +28,7 @@ Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.
 scoop install allure
 ```
 
-###### Running tests
+## Running tests
 - clone project
 - open src/test/resources/user.properties file and edit username and password values
 ```
@@ -46,7 +46,7 @@ mvn allure:serve
 ```
 which opens allure report locally
 
-###### Project info
+## Project info
 Project contains tests of two twitter features with following cases:
 - Sending tweets
     - Tweet send button is disabled when the tweet text area is empty
